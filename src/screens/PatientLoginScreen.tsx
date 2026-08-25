@@ -8,10 +8,12 @@ import {
   StatusBar,
   ScrollView,
   BackHandler,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { Eye, EyeOff } from 'lucide-react-native';
-import Svg, { Path, G } from 'react-native-svg';
-import { BackButton } from '../components/common/BackButton';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
+import Svg, { Path } from 'react-native-svg';
 
 interface PatientLoginScreenProps {
   onBack: () => void;
@@ -57,6 +59,9 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   useEffect(() => {
     const handleHardwareBack = () => {
       onBack();
@@ -71,72 +76,118 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}>
-        {/* Title & Subtitle */}
-        <View style={{ marginBottom: 32 }}>
-          <Text style={{ fontSize: 32, fontWeight: '800', color: '#111827', letterSpacing: -0.5 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
+        >
+        {/* Top Header Logo Badge */}
+        <View style={{ alignItems: 'center', marginBottom: 28 }}>
+          <View
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 24,
+              backgroundColor: '#EFF6FF',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 16,
+            }}
+          >
+            <Image
+              source={require('../../assets/logo.png')}
+              style={{ width: 50, height: 50, resizeMode: 'contain' }}
+            />
+          </View>
+
+          <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', letterSpacing: -0.5, textAlign: 'center' }}>
             Login
           </Text>
-          <Text style={{ fontSize: 15, color: '#6B7280', marginTop: 8 }}>
+          <Text style={{ fontSize: 14, color: '#6B7280', marginTop: 6, textAlign: 'center' }}>
             Welcome back! Please login to your account
           </Text>
         </View>
 
-        {/* Input Fields */}
+        {/* Input Form Fields */}
         <View style={{ gap: 20 }}>
-          {/* Email or Phone */}
+          {/* Email or Phone Input */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 8 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
               Email or Phone
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: isEmailFocused ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: isEmailFocused ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 54,
-                justifyContent: 'center',
+                height: 56,
+                flexDirection: 'row',
+                alignItems: 'center',
+                shadowColor: isEmailFocused ? '#2563EB' : '#000000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isEmailFocused ? 0.1 : 0.02,
+                shadowRadius: 6,
+                elevation: isEmailFocused ? 2 : 0,
               }}
             >
+              <Mail size={20} color={isEmailFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Enter your email or phone"
                 placeholderTextColor="#9CA3AF"
                 value={emailOrPhone}
                 onChangeText={setEmailOrPhone}
-                style={{ fontSize: 15, color: '#111827' }}
+                onFocus={() => setIsEmailFocused(true)}
+                onBlur={() => setIsEmailFocused(false)}
+                style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
             </View>
           </View>
 
-          {/* Password */}
+          {/* Password Input */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 8 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
               Password
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: isPasswordFocused ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: isPasswordFocused ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 54,
+                height: 56,
                 flexDirection: 'row',
                 alignItems: 'center',
+                shadowColor: isPasswordFocused ? '#2563EB' : '#000000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isPasswordFocused ? 0.1 : 0.02,
+                shadowRadius: 6,
+                elevation: isPasswordFocused ? 2 : 0,
               }}
             >
+              <Lock size={20} color={isPasswordFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Enter your password"
                 placeholderTextColor="#9CA3AF"
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
                 style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
-                {showPassword ? <EyeOff size={20} color="#6B7280" /> : <Eye size={20} color="#6B7280" />}
+                {showPassword ? (
+                  <EyeOff size={20} color="#6B7280" />
+                ) : (
+                  <Eye size={20} color="#6B7280" />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -145,13 +196,13 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
         {/* Forgot Password Link */}
         <View style={{ alignItems: 'flex-end', marginTop: 12, marginBottom: 28 }}>
           <TouchableOpacity activeOpacity={0.7}>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#2563EB' }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>
               Forgot Password?
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* Login Button */}
+        {/* Login Primary Button */}
         <TouchableOpacity
           onPress={onLoginSuccess}
           activeOpacity={0.85}
@@ -162,65 +213,88 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
             justifyContent: 'center',
             alignItems: 'center',
             shadowColor: '#2563EB',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.25,
-            shadowRadius: 8,
-            elevation: 4,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.28,
+            shadowRadius: 10,
+            elevation: 5,
             marginBottom: 32,
           }}
         >
           <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Login</Text>
         </TouchableOpacity>
 
-        {/* Social Login Section */}
-        <View style={{ alignItems: 'center', marginBottom: 24 }}>
-          <Text style={{ fontSize: 14, color: '#9CA3AF', marginBottom: 20 }}>or continue with</Text>
+        {/* Social Login Divider & Options */}
+        <View style={{ alignItems: 'center', marginBottom: 28 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
+            <Text style={{ fontSize: 13, fontWeight: '500', color: '#9CA3AF', marginHorizontal: 14 }}>
+              or continue with
+            </Text>
+            <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
+          </View>
 
           <View style={{ flexDirection: 'row', gap: 16 }}>
-            {/* Google */}
+            {/* Google Button */}
             <TouchableOpacity
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               style={{
-                width: 72,
+                flex: 1,
                 height: 54,
                 borderRadius: 16,
                 backgroundColor: '#FFFFFF',
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderWidth: 1,
                 borderColor: '#E2E8F0',
+                gap: 8,
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.03,
+                shadowRadius: 4,
+                elevation: 1,
               }}
             >
               <GoogleIcon />
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Google</Text>
             </TouchableOpacity>
 
-            {/* Apple */}
+            {/* Apple Button */}
             <TouchableOpacity
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               style={{
-                width: 72,
+                flex: 1,
                 height: 54,
                 borderRadius: 16,
                 backgroundColor: '#FFFFFF',
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderWidth: 1,
                 borderColor: '#E2E8F0',
+                gap: 8,
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.03,
+                shadowRadius: 4,
+                elevation: 1,
               }}
             >
               <AppleIcon />
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Apple</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Footer: Sign Up */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 12 }}>
+        {/* Footer Link to Signup */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 14, color: '#6B7280' }}>Don't have an account? </Text>
-          <TouchableOpacity onPress={onGoToSignup}>
+          <TouchableOpacity onPress={onGoToSignup} activeOpacity={0.7}>
             <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
-  );
+    </KeyboardAvoidingView>
+  </SafeAreaView>
+);
 };

@@ -8,9 +8,11 @@ import {
   StatusBar,
   ScrollView,
   BackHandler,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { Eye, EyeOff, Check } from 'lucide-react-native';
-import { BackButton } from '../components/common/BackButton';
+import { User, Mail, Phone, Lock, Eye, EyeOff, Check } from 'lucide-react-native';
 
 interface PatientSignupScreenProps {
   onBack: () => void;
@@ -28,8 +30,11 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
+
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   useEffect(() => {
     const handleHardwareBack = () => {
@@ -45,122 +50,162 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}>
-        {/* Title & Subtitle */}
-        <View style={{ marginBottom: 28 }}>
-          <Text style={{ fontSize: 30, fontWeight: '800', color: '#111827', letterSpacing: -0.5 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
+        >
+        {/* Top Header Logo Badge */}
+        <View style={{ alignItems: 'center', marginBottom: 24 }}>
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 20,
+              backgroundColor: '#EFF6FF',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 14,
+            }}
+          >
+            <Image
+              source={require('../../assets/logo.png')}
+              style={{ width: 44, height: 44, resizeMode: 'contain' }}
+            />
+          </View>
+
+          <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', letterSpacing: -0.5, textAlign: 'center' }}>
             Create Account
           </Text>
-          <Text style={{ fontSize: 15, color: '#6B7280', marginTop: 6 }}>
-            Join us today!
+          <Text style={{ fontSize: 14, color: '#6B7280', marginTop: 4, textAlign: 'center' }}>
+            Join us today to manage your health seamlessly
           </Text>
         </View>
 
-        {/* Input Fields */}
-        <View style={{ gap: 18 }}>
+        {/* Input Form Fields */}
+        <View style={{ gap: 16 }}>
           {/* Full Name */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 6 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 6 }}>
               Full Name
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: focusedField === 'fullName' ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: focusedField === 'fullName' ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 52,
-                justifyContent: 'center',
+                height: 54,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
+              <User size={20} color={focusedField === 'fullName' ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Enter your full name"
                 placeholderTextColor="#9CA3AF"
                 value={fullName}
                 onChangeText={setFullName}
-                style={{ fontSize: 15, color: '#111827' }}
+                onFocus={() => setFocusedField('fullName')}
+                onBlur={() => setFocusedField(null)}
+                style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
             </View>
           </View>
 
           {/* Email */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 6 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 6 }}>
               Email
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: focusedField === 'email' ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: focusedField === 'email' ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 52,
-                justifyContent: 'center',
+                height: 54,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
+              <Mail size={20} color={focusedField === 'email' ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Enter your email"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="email-address"
                 value={email}
                 onChangeText={setEmail}
-                style={{ fontSize: 15, color: '#111827' }}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
+                style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
             </View>
           </View>
 
           {/* Phone */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 6 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 6 }}>
               Phone
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: focusedField === 'phone' ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: focusedField === 'phone' ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 52,
-                justifyContent: 'center',
+                height: 54,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
+              <Phone size={20} color={focusedField === 'phone' ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Enter your phone number"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="phone-pad"
                 value={phone}
                 onChangeText={setPhone}
-                style={{ fontSize: 15, color: '#111827' }}
+                onFocus={() => setFocusedField('phone')}
+                onBlur={() => setFocusedField(null)}
+                style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
             </View>
           </View>
 
           {/* Password */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 6 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 6 }}>
               Password
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: focusedField === 'password' ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: focusedField === 'password' ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 52,
+                height: 54,
                 flexDirection: 'row',
                 alignItems: 'center',
               }}
             >
+              <Lock size={20} color={focusedField === 'password' ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Create a password"
                 placeholderTextColor="#9CA3AF"
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
                 style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
@@ -171,27 +216,31 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
 
           {/* Confirm Password */}
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 6 }}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 6 }}>
               Confirm Password
             </Text>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: focusedField === 'confirmPassword' ? '#FFFFFF' : '#F8FAFC',
                 borderRadius: 16,
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
+                borderWidth: 1.5,
+                borderColor: focusedField === 'confirmPassword' ? '#2563EB' : '#E2E8F0',
                 paddingHorizontal: 16,
-                height: 52,
-                justifyContent: 'center',
+                height: 54,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
+              <Lock size={20} color={focusedField === 'confirmPassword' ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
               <TextInput
                 placeholder="Confirm your password"
                 placeholderTextColor="#9CA3AF"
                 secureTextEntry={!showPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                style={{ fontSize: 15, color: '#111827' }}
+                onFocus={() => setFocusedField('confirmPassword')}
+                onBlur={() => setFocusedField(null)}
+                style={{ flex: 1, fontSize: 15, color: '#111827' }}
               />
             </View>
           </View>
@@ -235,10 +284,10 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
             justifyContent: 'center',
             alignItems: 'center',
             shadowColor: '#2563EB',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.25,
-            shadowRadius: 8,
-            elevation: 4,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.28,
+            shadowRadius: 10,
+            elevation: 5,
             marginBottom: 24,
           }}
         >
@@ -246,13 +295,14 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
         </TouchableOpacity>
 
         {/* Footer: Login Link */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 14, color: '#6B7280' }}>Already have an account? </Text>
-          <TouchableOpacity onPress={onGoToLogin}>
+          <TouchableOpacity onPress={onGoToLogin} activeOpacity={0.7}>
             <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Login</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
-  );
+    </KeyboardAvoidingView>
+  </SafeAreaView>
+);
 };
