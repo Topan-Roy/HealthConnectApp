@@ -8,6 +8,9 @@ import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
 import { RoleSelectionScreen } from './src/screens/RoleSelectionScreen';
 import { PatientLoginScreen } from './src/screens/PatientLoginScreen';
 import { PatientSignupScreen } from './src/screens/PatientSignupScreen';
+import { OTPVerificationScreen } from './src/screens/OTPVerificationScreen';
+import { ProfileSetupScreen } from './src/screens/ProfileSetupScreen';
+import { SetupCompleteScreen } from './src/screens/SetupCompleteScreen';
 
 type ScreenState =
   | 'splash'
@@ -15,7 +18,10 @@ type ScreenState =
   | 'welcome'
   | 'role-selection'
   | 'patient-login'
-  | 'patient-signup';
+  | 'patient-signup'
+  | 'otp-verification'
+  | 'profile-setup'
+  | 'setup-complete';
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
@@ -23,7 +29,10 @@ export default function App() {
 
   const handleSelectRole = (role: 'patient' | 'doctor') => {
     setUserRole(role);
-    setScreen('patient-login');
+    if (role === 'patient') {
+      setScreen('patient-login');
+    }
+    // Doctor: কোনো পেজ আসবে না এখনো
   };
 
   return (
@@ -73,8 +82,31 @@ export default function App() {
       {screen === 'patient-signup' && (
         <PatientSignupScreen
           onBack={() => setScreen('patient-login')}
-          onSignupSuccess={() => setScreen('patient-login')}
+          onSignupSuccess={() => setScreen('otp-verification')}
           onGoToLogin={() => setScreen('patient-login')}
+        />
+      )}
+
+      {/* 7. OTP Verification Screen */}
+      {screen === 'otp-verification' && (
+        <OTPVerificationScreen
+          onBack={() => setScreen('patient-signup')}
+          onVerifySuccess={() => setScreen('profile-setup')}
+        />
+      )}
+
+      {/* 8. Profile Setup Screen (5 steps internally) */}
+      {screen === 'profile-setup' && (
+        <ProfileSetupScreen
+          onBack={() => setScreen('otp-verification')}
+          onComplete={() => setScreen('setup-complete')}
+        />
+      )}
+
+      {/* 9. Setup Complete Screen */}
+      {screen === 'setup-complete' && (
+        <SetupCompleteScreen
+          onGoToHome={() => setScreen('splash')}
         />
       )}
     </>
