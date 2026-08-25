@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SplashLogo } from '../components/illustrations/SplashLogo';
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -19,9 +18,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 }}>
-        {/* Logo */}
+        {/* Logo Image from assets */}
         <View style={{ marginBottom: 24 }}>
-          <SplashLogo size={130} />
+          <Image
+            source={require('../../assets/logo.png')}
+            style={{ width: 140, height: 140, resizeMode: 'contain' }}
+          />
         </View>
 
         {/* Title */}

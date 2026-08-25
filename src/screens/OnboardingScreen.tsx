@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DoctorPatientIllustration } from '../components/illustrations/DoctorPatientIllustration';
-import { BookingIllustration } from '../components/illustrations/BookingIllustration';
-import { HealthRecordsIllustration } from '../components/illustrations/HealthRecordsIllustration';
 
 interface OnboardingScreenProps {
   onComplete: () => void;
@@ -19,21 +16,21 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
       id: 1,
       title: 'Find the Right Doctor',
       subtitle: 'Search and connect with trusted doctors near you.',
-      Illustration: DoctorPatientIllustration,
+      image: require('../../assets/image1.png'),
       buttonText: 'Next',
     },
     {
       id: 2,
       title: 'Book Appointments Easily',
       subtitle: 'Choose your preferred date and time without waiting.',
-      Illustration: BookingIllustration,
+      image: require('../../assets/image2.png'),
       buttonText: 'Next',
     },
     {
       id: 3,
       title: 'Manage Your Health',
       subtitle: 'Keep appointments, prescriptions and medical records in one place.',
-      Illustration: HealthRecordsIllustration,
+      image: require('../../assets/image3.png'),
       buttonText: 'Get Started',
     },
   ];
@@ -47,7 +44,6 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
   };
 
   const currentSlide = slides[currentIndex];
-  const { Illustration } = currentSlide;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -62,9 +58,16 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
 
       {/* Main Content Area */}
       <View style={{ flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingBottom: 40 }}>
-        {/* Illustration Container */}
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
-          <Illustration width={Math.min(width - 48, 320)} height={260} />
+        {/* Image Container */}
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginVertical: 10 }}>
+          <Image
+            source={currentSlide.image}
+            style={{
+              width: Math.min(width - 48, 300),
+              height: 280,
+              resizeMode: 'contain',
+            }}
+          />
         </View>
 
         {/* Text Details */}
