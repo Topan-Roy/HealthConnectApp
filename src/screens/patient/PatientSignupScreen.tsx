@@ -73,7 +73,7 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
             }}
           >
             <Image
-              source={require('../../assets/logo.png')}
+              source={require('../../../assets/logo.png')}
               style={{ width: 44, height: 44, resizeMode: 'contain' }}
             />
           </View>

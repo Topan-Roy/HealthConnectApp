@@ -6,11 +6,11 @@ import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
 import { RoleSelectionScreen } from './src/screens/RoleSelectionScreen';
-import { PatientLoginScreen } from './src/screens/PatientLoginScreen';
-import { PatientSignupScreen } from './src/screens/PatientSignupScreen';
-import { OTPVerificationScreen } from './src/screens/OTPVerificationScreen';
-import { ProfileSetupScreen } from './src/screens/ProfileSetupScreen';
-import { SetupCompleteScreen } from './src/screens/SetupCompleteScreen';
+import { PatientLoginScreen } from './src/screens/patient/PatientLoginScreen';
+import { PatientSignupScreen } from './src/screens/patient/PatientSignupScreen';
+import { OTPVerificationScreen } from './src/screens/patient/OTPVerificationScreen';
+import { ProfileSetupScreen } from './src/screens/patient/ProfileSetupScreen';
+import { SetupCompleteScreen } from './src/screens/patient/SetupCompleteScreen';
 
 type ScreenState =
   | 'splash'
