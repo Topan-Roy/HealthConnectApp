@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app-pro-set",
-    "slug": "app-pro-set",
+    "name": "HealthConnect",
+    "slug": "HealthConnect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
