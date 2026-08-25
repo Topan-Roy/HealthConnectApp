@@ -6,9 +6,16 @@ import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
 import { RoleSelectionScreen } from './src/screens/RoleSelectionScreen';
-import { HomeScreen } from './src/screens/HomeScreen';
+import { PatientLoginScreen } from './src/screens/PatientLoginScreen';
+import { PatientSignupScreen } from './src/screens/PatientSignupScreen';
 
-type ScreenState = 'splash' | 'onboarding' | 'welcome' | 'role-selection' | 'home';
+type ScreenState =
+  | 'splash'
+  | 'onboarding'
+  | 'welcome'
+  | 'role-selection'
+  | 'patient-login'
+  | 'patient-signup';
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
@@ -16,7 +23,7 @@ export default function App() {
 
   const handleSelectRole = (role: 'patient' | 'doctor') => {
     setUserRole(role);
-    setScreen('home');
+    setScreen('patient-login');
   };
 
   return (
@@ -28,9 +35,12 @@ export default function App() {
         <SplashScreen onFinish={() => setScreen('onboarding')} />
       )}
 
-      {/* 2. Onboarding 01, 02, 03 Screens */}
+      {/* 2. Onboarding Screens (01, 02, 03) */}
       {screen === 'onboarding' && (
-        <OnboardingScreen onComplete={() => setScreen('welcome')} />
+        <OnboardingScreen
+          onComplete={() => setScreen('welcome')}
+          onBack={() => setScreen('splash')}
+        />
       )}
 
       {/* 3. Welcome / Auth Options Screen */}
@@ -38,6 +48,7 @@ export default function App() {
         <WelcomeAuthScreen
           onGetStarted={() => setScreen('role-selection')}
           onLogin={() => setScreen('role-selection')}
+          onBack={() => setScreen('onboarding')}
         />
       )}
 
@@ -49,9 +60,22 @@ export default function App() {
         />
       )}
 
-      {/* 5. Home Dashboard */}
-      {screen === 'home' && (
-        <HomeScreen onRestartOnboarding={() => setScreen('splash')} />
+      {/* 5. Patient Login Screen */}
+      {screen === 'patient-login' && (
+        <PatientLoginScreen
+          onBack={() => setScreen('role-selection')}
+          onLoginSuccess={() => setScreen('patient-login')}
+          onGoToSignup={() => setScreen('patient-signup')}
+        />
+      )}
+
+      {/* 6. Patient Signup Screen */}
+      {screen === 'patient-signup' && (
+        <PatientSignupScreen
+          onBack={() => setScreen('patient-login')}
+          onSignupSuccess={() => setScreen('patient-login')}
+          onGoToLogin={() => setScreen('patient-login')}
+        />
       )}
     </>
   );

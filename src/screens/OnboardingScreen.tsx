@@ -1,15 +1,33 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, Image, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BackButton } from '../components/common/BackButton';
 
 interface OnboardingScreenProps {
   onComplete: () => void;
+  onBack?: () => void;
 }
 
 const { width } = Dimensions.get('window');
 
-export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
+export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete, onBack }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const handleHardwareBack = () => {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+        return true;
+      } else if (onBack) {
+        onBack();
+        return true;
+      }
+      return false;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', handleHardwareBack);
+    return () => subscription.remove();
+  }, [currentIndex, onBack]);
 
   const slides = [
     {
@@ -43,12 +61,28 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
     }
   };
 
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else if (onBack) {
+      onBack();
+    }
+  };
+
   const currentSlide = slides[currentIndex];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       {/* Top Bar with Skip */}
-      <View style={{ height: 48, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingHorizontal: 24 }}>
+      <View
+        style={{
+          height: 48,
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          paddingHorizontal: 24,
+        }}
+      >
         {currentIndex < slides.length - 1 && (
           <TouchableOpacity onPress={onComplete} activeOpacity={0.7} style={{ padding: 8 }}>
             <Text style={{ fontSize: 15, fontWeight: '600', color: '#6B7280' }}>Skip</Text>

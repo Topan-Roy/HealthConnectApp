@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
-import { ArrowLeft, Languages, ChevronRight } from 'lucide-react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, BackHandler } from 'react-native';
+import { Languages, ChevronRight } from 'lucide-react-native';
 import Svg, { Circle, Path, Rect, G } from 'react-native-svg';
+import { BackButton } from '../components/common/BackButton';
 
 interface RoleSelectionScreenProps {
   onBack: () => void;
@@ -42,6 +43,15 @@ export const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({
   onBack,
   onSelectRole,
 }) => {
+  useEffect(() => {
+    const handleHardwareBack = () => {
+      onBack();
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', handleHardwareBack);
+    return () => subscription.remove();
+  }, [onBack]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -50,41 +60,15 @@ export const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           alignItems: 'center',
           paddingHorizontal: 20,
           paddingTop: 16,
           paddingBottom: 12,
         }}
       >
-        <TouchableOpacity
-          onPress={onBack}
-          activeOpacity={0.7}
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 22,
-            backgroundColor: '#F8FAFC',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <ArrowLeft size={22} color="#111827" />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 22,
-            backgroundColor: '#F8FAFC',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Languages size={22} color="#111827" />
-        </TouchableOpacity>
+
       </View>
 
       {/* Center Heading */}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path, Circle, Rect, G } from 'react-native-svg';
 import { SplashLogo } from '../components/illustrations/SplashLogo';
@@ -7,6 +7,7 @@ import { SplashLogo } from '../components/illustrations/SplashLogo';
 interface WelcomeAuthScreenProps {
   onGetStarted: () => void;
   onLogin: () => void;
+  onBack?: () => void;
 }
 
 const { width } = Dimensions.get('window');
@@ -56,7 +57,19 @@ const DoctorWelcomeIllustration: React.FC = () => {
   );
 };
 
-export const WelcomeAuthScreen: React.FC<WelcomeAuthScreenProps> = ({ onGetStarted, onLogin }) => {
+export const WelcomeAuthScreen: React.FC<WelcomeAuthScreenProps> = ({ onGetStarted, onLogin, onBack }) => {
+  useEffect(() => {
+    const handleHardwareBack = () => {
+      if (onBack) {
+        onBack();
+        return true;
+      }
+      return false;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', handleHardwareBack);
+    return () => subscription.remove();
+  }, [onBack]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#2563EB' }}>
       <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }}>
