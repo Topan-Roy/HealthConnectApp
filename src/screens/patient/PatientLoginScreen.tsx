@@ -19,6 +19,7 @@ interface PatientLoginScreenProps {
   onBack: () => void;
   onLoginSuccess: () => void;
   onGoToSignup: () => void;
+  onForgotPassword: () => void;
 }
 
 // Google Logo Icon SVG
@@ -54,6 +55,7 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
   onBack,
   onLoginSuccess,
   onGoToSignup,
+  onForgotPassword,
 }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -195,7 +197,7 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
 
         {/* Forgot Password Link */}
         <View style={{ alignItems: 'flex-end', marginTop: 12, marginBottom: 28 }}>
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity activeOpacity={0.7} onPress={onForgotPassword}>
             <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>
               Forgot Password?
             </Text>

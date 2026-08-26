@@ -11,6 +11,8 @@ import { PatientSignupScreen } from './src/screens/patient/PatientSignupScreen';
 import { OTPVerificationScreen } from './src/screens/patient/OTPVerificationScreen';
 import { ProfileSetupScreen } from './src/screens/patient/ProfileSetupScreen';
 import { SetupCompleteScreen } from './src/screens/patient/SetupCompleteScreen';
+import { ForgotPasswordScreen } from './src/screens/patient/ForgotPasswordScreen';
+import { ResetPasswordScreen } from './src/screens/patient/ResetPasswordScreen';
 
 type ScreenState =
   | 'splash'
@@ -21,7 +23,10 @@ type ScreenState =
   | 'patient-signup'
   | 'otp-verification'
   | 'profile-setup'
-  | 'setup-complete';
+  | 'setup-complete'
+  | 'forgot-password'
+  | 'forgot-password-otp'
+  | 'reset-password';
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
@@ -75,6 +80,7 @@ export default function App() {
           onBack={() => setScreen('role-selection')}
           onLoginSuccess={() => setScreen('patient-login')}
           onGoToSignup={() => setScreen('patient-signup')}
+          onForgotPassword={() => setScreen('forgot-password')}
         />
       )}
 
@@ -107,6 +113,28 @@ export default function App() {
       {screen === 'setup-complete' && (
         <SetupCompleteScreen
           onGoToHome={() => setScreen('splash')}
+        />
+      )}
+
+      {/* Forgot Password Flow */}
+      {screen === 'forgot-password' && (
+        <ForgotPasswordScreen
+          onBack={() => setScreen('patient-login')}
+          onSendOTP={() => setScreen('forgot-password-otp')}
+        />
+      )}
+
+      {screen === 'forgot-password-otp' && (
+        <OTPVerificationScreen
+          onBack={() => setScreen('forgot-password')}
+          onVerifySuccess={() => setScreen('reset-password')}
+        />
+      )}
+
+      {screen === 'reset-password' && (
+        <ResetPasswordScreen
+          onBack={() => setScreen('forgot-password')}
+          onResetSuccess={() => setScreen('patient-login')}
         />
       )}
     </>
