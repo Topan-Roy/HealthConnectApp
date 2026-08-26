@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Image, BackHandler } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Image, BackHandler, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackButton } from '../components/common/BackButton';
 
@@ -72,7 +72,13 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete, 
   const currentSlide = slides[currentIndex];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={require('../../assets/role_bg.jpg')}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        resizeMode="cover"
+      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
       {/* Top Bar with Skip */}
       <View
         style={{
@@ -85,31 +91,58 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete, 
       >
         {currentIndex < slides.length - 1 && (
           <TouchableOpacity onPress={onComplete} activeOpacity={0.7} style={{ padding: 8 }}>
-            <Text style={{ fontSize: 15, fontWeight: '600', color: '#6B7280' }}>Skip</Text>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: '#48494dff' }}>Skip</Text>
           </TouchableOpacity>
         )}
       </View>
 
       {/* Main Content Area */}
       <View style={{ flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingBottom: 40 }}>
-        {/* Image Container */}
+        {/* Image Container — white glass card */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginVertical: 10 }}>
-          <Image
-            source={currentSlide.image}
+          <View
             style={{
-              width: Math.min(width - 48, 300),
-              height: 280,
-              resizeMode: 'contain',
+              backgroundColor: 'rgba(255, 255, 255, 0.88)',
+              borderRadius: 32,
+              padding: 20,
+              alignItems: 'center',
+              shadowColor: '#2563EB',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.12,
+              shadowRadius: 20,
+              elevation: 6,
+              borderWidth: 1,
+              borderColor: 'rgba(255, 255, 255, 0.6)',
             }}
-          />
+          >
+            <Image
+              source={currentSlide.image}
+              style={{
+                width: Math.min(width - 100, 260),
+                height: 240,
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
         </View>
 
-        {/* Text Details */}
-        <View style={{ alignItems: 'center', paddingHorizontal: 16, marginBottom: 32 }}>
-          <Text style={{ fontSize: 26, fontWeight: '800', color: '#111827', textAlign: 'center', marginBottom: 12 }}>
+        {/* Text Details — glass card */}
+        <View
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            borderRadius: 24,
+            paddingHorizontal: 24,
+            paddingVertical: 20,
+            marginBottom: 24,
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: 'rgba(255, 255, 255, 0.5)',
+          }}
+        >
+          <Text style={{ fontSize: 24, fontWeight: '800', color: '#111827', textAlign: 'center', marginBottom: 8 }}>
             {currentSlide.title}
           </Text>
-          <Text style={{ fontSize: 15, fontWeight: '400', color: '#6B7280', textAlign: 'center', lineHeight: 22 }}>
+          <Text style={{ fontSize: 14, fontWeight: '400', color: '#374151', textAlign: 'center', lineHeight: 22 }}>
             {currentSlide.subtitle}
           </Text>
         </View>
@@ -149,13 +182,14 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete, 
                   width: currentIndex === index ? 24 : 8,
                   height: 8,
                   borderRadius: 4,
-                  backgroundColor: currentIndex === index ? '#2563EB' : '#E5E7EB',
+                  backgroundColor: currentIndex === index ? '#2563EB' : 'rgba(255,255,255,0.7)',
                 }}
               />
             ))}
           </View>
         </View>
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };

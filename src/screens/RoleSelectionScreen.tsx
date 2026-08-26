@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, BackHandler } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, BackHandler, Image, ImageBackground, StyleSheet } from 'react-native';
 import { Languages, ChevronRight } from 'lucide-react-native';
 import Svg, { Circle, Path, Rect, G } from 'react-native-svg';
 import { BackButton } from '../components/common/BackButton';
@@ -53,98 +53,121 @@ export const RoleSelectionScreen: React.FC<RoleSelectionScreenProps> = ({
     return () => subscription.remove();
   }, [onBack]);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={require('../../assets/role_bg.jpg')}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        resizeMode="cover"
+      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
 
-      {/* Top Header */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-          paddingTop: 16,
-          paddingBottom: 12,
-        }}
-      >
-
-
-      </View>
-
-      {/* Center Heading */}
-      <View style={{ alignItems: 'center', marginTop: 32, marginBottom: 40, paddingHorizontal: 24 }}>
-        <Text style={{ fontSize: 30, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
-          I am a
-        </Text>
-        <Text style={{ fontSize: 15, color: '#6B7280', marginTop: 8, textAlign: 'center' }}>
-          Select your role to continue
-        </Text>
-      </View>
-
-      {/* Role Cards Container */}
-      <View style={{ paddingHorizontal: 20, gap: 20 }}>
-        {/* Patient Card */}
-        <TouchableOpacity
-          onPress={() => onSelectRole('patient')}
-          activeOpacity={0.85}
+        {/* Top Header */}
+        <View
           style={{
-            backgroundColor: '#EFF6FF',
-            borderRadius: 24,
-            padding: 20,
             flexDirection: 'row',
+            justifyContent: 'flex-end',
             alignItems: 'center',
-            borderWidth: 1.5,
-            borderColor: '#BFDBFE',
-            shadowColor: '#2563EB',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.06,
-            shadowRadius: 8,
-            elevation: 2,
+            paddingHorizontal: 20,
+            paddingTop: 16,
+            paddingBottom: 12,
           }}
         >
-          <PatientAvatarSVG />
 
-          <View style={{ flex: 1, marginLeft: 16, marginRight: 8 }}>
-            <Text style={{ fontSize: 20, fontWeight: '800', color: '#1E3A8A' }}>Patient</Text>
-            <Text style={{ fontSize: 13, color: '#475569', marginTop: 4, lineHeight: 18 }}>
-              Book appointments and manage your health
-            </Text>
+
+        </View>
+
+        {/* Center Heading */}
+        <View style={{ alignItems: 'center', marginTop: 32, marginBottom: 40, paddingHorizontal: 24 }}>
+          <View
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 24,
+              backgroundColor: '#EFF6FF',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 16,
+            }}
+          >
+            <Image
+              source={require('../../assets/logo.png')}
+              style={{ width: 50, height: 50, resizeMode: 'contain' }}
+            />
           </View>
+          <Text style={{ fontSize: 30, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
+            I am a
+          </Text>
+          <Text style={{ fontSize: 15, color: '#48494dff', marginTop: 8, textAlign: 'center' }}>
+            Select your role to continue
+          </Text>
+        </View>
 
-          <ChevronRight size={22} color="#2563EB" />
-        </TouchableOpacity>
+        {/* Role Cards Container */}
+        <View style={{ paddingHorizontal: 20, gap: 20 }}>
+          {/* Patient Card */}
+          <TouchableOpacity
+            onPress={() => onSelectRole('patient')}
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              borderRadius: 24,
+              padding: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+              shadowColor: '#2563EB',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 2,
+            }}
+          >
+            <PatientAvatarSVG />
 
-        {/* Doctor Card */}
-        <TouchableOpacity
-          onPress={() => onSelectRole('doctor')}
-          activeOpacity={0.85}
-          style={{
-            backgroundColor: '#EFF6FF',
-            borderRadius: 24,
-            padding: 20,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderWidth: 1.5,
-            borderColor: '#BFDBFE',
-            shadowColor: '#2563EB',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.06,
-            shadowRadius: 8,
-            elevation: 2,
-          }}
-        >
-          <DoctorAvatarSVG />
+            <View style={{ flex: 1, marginLeft: 16, marginRight: 8 }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: '#1E3A8A' }}>Patient</Text>
+              <Text style={{ fontSize: 13, color: '#475569', marginTop: 4, lineHeight: 18 }}>
+                Book appointments and manage your health
+              </Text>
+            </View>
 
-          <View style={{ flex: 1, marginLeft: 16, marginRight: 8 }}>
-            <Text style={{ fontSize: 20, fontWeight: '800', color: '#1E3A8A' }}>Doctor</Text>
-            <Text style={{ fontSize: 13, color: '#475569', marginTop: 4, lineHeight: 18 }}>
-              Manage patients and appointments
-            </Text>
-          </View>
+            <ChevronRight size={22} color="#2563EB" />
+          </TouchableOpacity>
 
-          <ChevronRight size={22} color="#2563EB" />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          {/* Doctor Card */}
+          <TouchableOpacity
+            onPress={() => onSelectRole('doctor')}
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              borderRadius: 24,
+              padding: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+              shadowColor: '#2563EB',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 2,
+            }}
+          >
+            <DoctorAvatarSVG />
+
+            <View style={{ flex: 1, marginLeft: 16, marginRight: 8 }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: '#1E3A8A' }}>Doctor</Text>
+              <Text style={{ fontSize: 13, color: '#475569', marginTop: 4, lineHeight: 18 }}>
+                Manage patients and appointments
+              </Text>
+            </View>
+
+            <ChevronRight size={22} color="#2563EB" />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };

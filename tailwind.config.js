@@ -21,7 +21,7 @@ module.exports = {
         error: '#DC2626',
         text: {
           main: '#111827',
-          secondary: '#6B7280',
+          secondary: '#48494dff',
         },
         bg: '#F8FAFC',
         card: '#FFFFFF',

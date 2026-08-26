@@ -9,6 +9,7 @@ import {
   ScrollView,
   BackHandler,
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -75,228 +76,235 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
   }, [onBack]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={require('../../../assets/role_bg.jpg')}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        resizeMode="cover"
+      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-        {/* Top Header Logo Badge */}
-        <View style={{ alignItems: 'center', marginBottom: 28 }}>
-          <View
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 24,
-              backgroundColor: '#EFF6FF',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 16,
-            }}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
           >
-            <Image
-              source={require('../../../assets/logo.png')}
-              style={{ width: 50, height: 50, resizeMode: 'contain' }}
-            />
-          </View>
+            {/* Top Header Logo Badge */}
+            <View style={{ alignItems: 'center', marginBottom: 28 }}>
+              <View
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: 24,
+                  backgroundColor: '#EFF6FF',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                <Image
+                  source={require('../../../assets/logo.png')}
+                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                />
+              </View>
 
-          <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', letterSpacing: -0.5, textAlign: 'center' }}>
-            Login
-          </Text>
-          <Text style={{ fontSize: 14, color: '#6B7280', marginTop: 6, textAlign: 'center' }}>
-            Welcome back! Please login to your account
-          </Text>
-        </View>
-
-        {/* Input Form Fields */}
-        <View style={{ gap: 20 }}>
-          {/* Email or Phone Input */}
-          <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
-              Email or Phone
-            </Text>
-            <View
-              style={{
-                backgroundColor: isEmailFocused ? '#FFFFFF' : '#F8FAFC',
-                borderRadius: 16,
-                borderWidth: 1.5,
-                borderColor: isEmailFocused ? '#2563EB' : '#E2E8F0',
-                paddingHorizontal: 16,
-                height: 56,
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: isEmailFocused ? '#2563EB' : '#000000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: isEmailFocused ? 0.1 : 0.02,
-                shadowRadius: 6,
-                elevation: isEmailFocused ? 2 : 0,
-              }}
-            >
-              <Mail size={20} color={isEmailFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
-              <TextInput
-                placeholder="Enter your email or phone"
-                placeholderTextColor="#9CA3AF"
-                value={emailOrPhone}
-                onChangeText={setEmailOrPhone}
-                onFocus={() => setIsEmailFocused(true)}
-                onBlur={() => setIsEmailFocused(false)}
-                style={{ flex: 1, fontSize: 15, color: '#111827' }}
-              />
+              <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', letterSpacing: -0.5, textAlign: 'center' }}>
+                Login
+              </Text>
+              <Text style={{ fontSize: 14, color: '#48494dff', marginTop: 6, textAlign: 'center' }}>
+                Welcome back! Please login to your account
+              </Text>
             </View>
-          </View>
 
-          {/* Password Input */}
-          <View>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
-              Password
-            </Text>
-            <View
-              style={{
-                backgroundColor: isPasswordFocused ? '#FFFFFF' : '#F8FAFC',
-                borderRadius: 16,
-                borderWidth: 1.5,
-                borderColor: isPasswordFocused ? '#2563EB' : '#E2E8F0',
-                paddingHorizontal: 16,
-                height: 56,
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: isPasswordFocused ? '#2563EB' : '#000000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: isPasswordFocused ? 0.1 : 0.02,
-                shadowRadius: 6,
-                elevation: isPasswordFocused ? 2 : 0,
-              }}
-            >
-              <Lock size={20} color={isPasswordFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
-              <TextInput
-                placeholder="Enter your password"
-                placeholderTextColor="#9CA3AF"
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={setPassword}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
-                style={{ flex: 1, fontSize: 15, color: '#111827' }}
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
-                {showPassword ? (
-                  <EyeOff size={20} color="#6B7280" />
-                ) : (
-                  <Eye size={20} color="#6B7280" />
-                )}
+            {/* Input Form Fields */}
+            <View style={{ gap: 20 }}>
+              {/* Email or Phone Input */}
+              <View>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
+                  Email or Phone
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: isEmailFocused ? '#FFFFFF' : '#F8FAFC',
+                    borderRadius: 16,
+                    borderWidth: 1.5,
+                    borderColor: isEmailFocused ? '#2563EB' : '#E2E8F0',
+                    paddingHorizontal: 16,
+                    height: 56,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    shadowColor: isEmailFocused ? '#2563EB' : '#000000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: isEmailFocused ? 0.1 : 0.02,
+                    shadowRadius: 6,
+                    elevation: isEmailFocused ? 2 : 0,
+                  }}
+                >
+                  <Mail size={20} color={isEmailFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
+                  <TextInput
+                    placeholder="Enter your email or phone"
+                    placeholderTextColor="#9CA3AF"
+                    value={emailOrPhone}
+                    onChangeText={setEmailOrPhone}
+                    onFocus={() => setIsEmailFocused(true)}
+                    onBlur={() => setIsEmailFocused(false)}
+                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                  />
+                </View>
+              </View>
+
+              {/* Password Input */}
+              <View>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
+                  Password
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: isPasswordFocused ? '#FFFFFF' : '#F8FAFC',
+                    borderRadius: 16,
+                    borderWidth: 1.5,
+                    borderColor: isPasswordFocused ? '#2563EB' : '#E2E8F0',
+                    paddingHorizontal: 16,
+                    height: 56,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    shadowColor: isPasswordFocused ? '#2563EB' : '#000000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: isPasswordFocused ? 0.1 : 0.02,
+                    shadowRadius: 6,
+                    elevation: isPasswordFocused ? 2 : 0,
+                  }}
+                >
+                  <Lock size={20} color={isPasswordFocused ? '#2563EB' : '#9CA3AF'} style={{ marginRight: 12 }} />
+                  <TextInput
+                    placeholder="Enter your password"
+                    placeholderTextColor="#9CA3AF"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setIsPasswordFocused(true)}
+                    onBlur={() => setIsPasswordFocused(false)}
+                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                  />
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
+                    {showPassword ? (
+                      <EyeOff size={20} color="#48494dff" />
+                    ) : (
+                      <Eye size={20} color="#48494dff" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            {/* Forgot Password Link */}
+            <View style={{ alignItems: 'flex-end', marginTop: 12, marginBottom: 28 }}>
+              <TouchableOpacity activeOpacity={0.7} onPress={onForgotPassword}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>
+                  Forgot Password?
+                </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
 
-        {/* Forgot Password Link */}
-        <View style={{ alignItems: 'flex-end', marginTop: 12, marginBottom: 28 }}>
-          <TouchableOpacity activeOpacity={0.7} onPress={onForgotPassword}>
-            <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Login Primary Button */}
-        <TouchableOpacity
-          onPress={onLoginSuccess}
-          activeOpacity={0.85}
-          style={{
-            backgroundColor: '#2563EB',
-            height: 56,
-            borderRadius: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: '#2563EB',
-            shadowOffset: { width: 0, height: 6 },
-            shadowOpacity: 0.28,
-            shadowRadius: 10,
-            elevation: 5,
-            marginBottom: 32,
-          }}
-        >
-          <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Login</Text>
-        </TouchableOpacity>
-
-        {/* Social Login Divider & Options */}
-        <View style={{ alignItems: 'center', marginBottom: 28 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-            <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
-            <Text style={{ fontSize: 13, fontWeight: '500', color: '#9CA3AF', marginHorizontal: 14 }}>
-              or continue with
-            </Text>
-            <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
-          </View>
-
-          <View style={{ flexDirection: 'row', gap: 16 }}>
-            {/* Google Button */}
+            {/* Login Primary Button */}
             <TouchableOpacity
-              activeOpacity={0.75}
+              onPress={onLoginSuccess}
+              activeOpacity={0.85}
               style={{
-                flex: 1,
-                height: 54,
+                backgroundColor: '#2563EB',
+                height: 56,
                 borderRadius: 16,
-                backgroundColor: '#FFFFFF',
-                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
-                gap: 8,
-                shadowColor: '#000000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.03,
-                shadowRadius: 4,
-                elevation: 1,
+                shadowColor: '#2563EB',
+                shadowOffset: { width: 0, height: 6 },
+                shadowOpacity: 0.28,
+                shadowRadius: 10,
+                elevation: 5,
+                marginBottom: 32,
               }}
             >
-              <GoogleIcon />
-              <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Google</Text>
+              <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Login</Text>
             </TouchableOpacity>
 
-            {/* Apple Button */}
-            <TouchableOpacity
-              activeOpacity={0.75}
-              style={{
-                flex: 1,
-                height: 54,
-                borderRadius: 16,
-                backgroundColor: '#FFFFFF',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: '#E2E8F0',
-                gap: 8,
-                shadowColor: '#000000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.03,
-                shadowRadius: 4,
-                elevation: 1,
-              }}
-            >
-              <AppleIcon />
-              <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Apple</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+            {/* Social Login Divider & Options */}
+            <View style={{ alignItems: 'center', marginBottom: 28 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
+                <Text style={{ fontSize: 13, fontWeight: '500', color: '#9CA3AF', marginHorizontal: 14 }}>
+                  or continue with
+                </Text>
+                <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
+              </View>
 
-        {/* Footer Link to Signup */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 14, color: '#6B7280' }}>Don't have an account? </Text>
-          <TouchableOpacity onPress={onGoToSignup} activeOpacity={0.7}>
-            <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  </SafeAreaView>
-);
+              <View style={{ flexDirection: 'row', gap: 16 }}>
+                {/* Google Button */}
+                <TouchableOpacity
+                  activeOpacity={0.75}
+                  style={{
+                    flex: 1,
+                    height: 54,
+                    borderRadius: 16,
+                    backgroundColor: '#FFFFFF',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: '#E2E8F0',
+                    gap: 8,
+                    shadowColor: '#000000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.03,
+                    shadowRadius: 4,
+                    elevation: 1,
+                  }}
+                >
+                  <GoogleIcon />
+                  <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Google</Text>
+                </TouchableOpacity>
+
+                {/* Apple Button */}
+                <TouchableOpacity
+                  activeOpacity={0.75}
+                  style={{
+                    flex: 1,
+                    height: 54,
+                    borderRadius: 16,
+                    backgroundColor: '#FFFFFF',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: '#E2E8F0',
+                    gap: 8,
+                    shadowColor: '#000000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.03,
+                    shadowRadius: 4,
+                    elevation: 1,
+                  }}
+                >
+                  <AppleIcon />
+                  <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Apple</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Footer Link to Signup */}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontSize: 14, color: '#48494dff' }}>Don't have an account? </Text>
+              <TouchableOpacity onPress={onGoToSignup} activeOpacity={0.7}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
+  );
 };

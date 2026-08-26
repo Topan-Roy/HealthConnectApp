@@ -23,7 +23,7 @@ const TOTAL_STEPS = 5;
 // Step Indicator
 const StepIndicator: React.FC<{ current: number; total: number }> = ({ current, total }) => (
   <View style={{ alignItems: 'center', marginBottom: 6 }}>
-    <Text style={{ fontSize: 12, color: '#6B7280', fontWeight: '500' }}>
+    <Text style={{ fontSize: 12, color: '#48494dff', fontWeight: '500' }}>
       Step {current} of {total}
     </Text>
     <View style={{ flexDirection: 'row', gap: 6, marginTop: 8 }}>
@@ -111,7 +111,7 @@ const StyledDropdown: React.FC<{
           {value || `Select ${label.toLowerCase()}`}
         </Text>
         <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-          <Path d="M6 9l6 6 6-6" stroke="#6B7280" strokeWidth={2} strokeLinecap="round" />
+          <Path d="M6 9l6 6 6-6" stroke="#48494dff" strokeWidth={2} strokeLinecap="round" />
         </Svg>
       </TouchableOpacity>
       {open && (
@@ -524,7 +524,7 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
                 onPress={() => setStep(3)}
                 style={{ alignItems: 'center', marginTop: 16 }}
               >
-                <Text style={{ fontSize: 14, color: '#6B7280', fontWeight: '500' }}>
+                <Text style={{ fontSize: 14, color: '#48494dff', fontWeight: '500' }}>
                   Skip for now
                 </Text>
               </TouchableOpacity>
