@@ -138,7 +138,12 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack }) =>
 
         {/* Doctor List */}
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
-          {DOCTORS_DATA.map((doctor) => (
+          {DOCTORS_DATA.filter(doctor => {
+            const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                  doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesCategory = activeCategory === 'All' || doctor.specialty === activeCategory;
+            return matchesSearch && matchesCategory;
+          }).map((doctor) => (
             <TouchableOpacity
               key={doctor.id}
               className="flex-row items-center p-4 bg-white rounded-3xl mb-4 border border-gray-100 shadow-sm shadow-gray-200/50"

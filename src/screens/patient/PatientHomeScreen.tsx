@@ -30,7 +30,7 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
           <PatientHomeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <PatientHomeQuickActions onFindDoctor={onFindDoctor} />
           <PatientHomeUpcoming />
-          <PatientHomeSpecialties />
+          <PatientHomeSpecialties searchQuery={searchQuery} />
         </ScrollView>
         </View>
         <PatientHomeBottomNav />
