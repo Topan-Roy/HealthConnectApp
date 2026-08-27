@@ -18,15 +18,23 @@ import {
   Settings2
 } from 'lucide-react-native';
 import { DOCTORS_DATA, Doctor } from '../../data/doctors';
+import { PatientHomeBottomNav } from '../../components/patient-home/PatientHomeBottomNav';
 
 const CATEGORIES = ['All', 'Cardiology', 'Neurology', 'Dermatology', 'Orthopedic'];
 
 interface FindDoctorScreenProps {
   onBack?: () => void;
   onDoctorPress?: (doctor: Doctor) => void;
+  onHome?: () => void;
+  onAppointments?: () => void;
 }
 
-export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack, onDoctorPress }) => {
+export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ 
+  onBack, 
+  onDoctorPress,
+  onHome,
+  onAppointments
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -149,6 +157,12 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack, onDo
           ))}
         </ScrollView>
       </View>
+      <PatientHomeBottomNav
+        activeTab="Doctors"
+        onHome={onHome}
+        onDoctors={() => {}}
+        onAppointments={onAppointments}
+      />
     </SafeAreaView>
     </ImageBackground>
   );

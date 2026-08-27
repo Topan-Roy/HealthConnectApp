@@ -3,11 +3,14 @@ import { View, Text, TouchableOpacity, ScrollView, ImageBackground, Image } from
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import { DOCTORS_DATA } from '../../data/doctors';
+import { PatientHomeBottomNav } from '../../components/patient-home/PatientHomeBottomNav';
 
 interface MyAppointmentsScreenProps {
   onBack?: () => void;
   onJoinAppointment?: () => void;
   onViewCompleted?: () => void;
+  onHome?: () => void;
+  onDoctors?: () => void;
 }
 
 type TabType = 'Upcoming' | 'Completed' | 'Cancelled';
@@ -42,7 +45,9 @@ const APPOINTMENTS = [
 export const MyAppointmentsScreen: React.FC<MyAppointmentsScreenProps> = ({
   onBack,
   onJoinAppointment,
-  onViewCompleted
+  onViewCompleted,
+  onHome,
+  onDoctors
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('Upcoming');
 
@@ -159,6 +164,12 @@ export const MyAppointmentsScreen: React.FC<MyAppointmentsScreenProps> = ({
             </View>
           )}
         </ScrollView>
+        <PatientHomeBottomNav
+          activeTab="Appointments"
+          onHome={onHome}
+          onDoctors={onDoctors}
+          onAppointments={() => {}}
+        />
       </SafeAreaView>
     </ImageBackground>
   );

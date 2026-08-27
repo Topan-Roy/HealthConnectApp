@@ -237,6 +237,8 @@ export default function App() {
             setSelectedDoctor(doctor);
             navigateTo('doctor-profile');
           }}
+          onHome={() => setScreen('patient-home')}
+          onAppointments={() => navigateTo('my-appointments')}
         />
       )}
 
@@ -299,6 +301,8 @@ export default function App() {
           onBack={() => setScreen('patient-home')}
           onJoinAppointment={() => setScreen('appointment-completed')} // Mocking join leading to completed for demo
           onViewCompleted={() => setScreen('appointment-completed')}
+          onHome={() => setScreen('patient-home')}
+          onDoctors={() => navigateTo('find-doctor')}
         />
       )}
 

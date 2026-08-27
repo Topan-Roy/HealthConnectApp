@@ -23,11 +23,18 @@ const BottomTabItem = ({
 );
 
 interface PatientHomeBottomNavProps {
+  activeTab?: 'Home' | 'Appointments' | 'Doctors' | 'Messages' | 'Profile';
+  onHome?: () => void;
   onDoctors?: () => void;
   onAppointments?: () => void;
 }
 
-export const PatientHomeBottomNav = ({ onDoctors, onAppointments }: PatientHomeBottomNavProps) => {
+export const PatientHomeBottomNav = ({
+  activeTab = 'Home',
+  onHome,
+  onDoctors,
+  onAppointments,
+}: PatientHomeBottomNavProps) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -49,11 +56,34 @@ export const PatientHomeBottomNav = ({ onDoctors, onAppointments }: PatientHomeB
         borderColor: 'rgba(226, 232, 240, 0.8)',
       }}
     >
-      <BottomTabItem icon={<Home size={22} color="#2563EB" />} label="Home" isActive />
-      <BottomTabItem icon={<Calendar size={22} color="#9CA3AF" />} label="Appointments" onPress={onAppointments} />
-      <BottomTabItem icon={<Users size={22} color="#9CA3AF" />} label="Doctors" onPress={onDoctors} />
-      <BottomTabItem icon={<MessageSquare size={22} color="#9CA3AF" />} label="Messages" />
-      <BottomTabItem icon={<User size={22} color="#9CA3AF" />} label="Profile" />
+      <BottomTabItem
+        icon={<Home size={22} color={activeTab === 'Home' ? '#2563EB' : '#9CA3AF'} />}
+        label="Home"
+        isActive={activeTab === 'Home'}
+        onPress={onHome}
+      />
+      <BottomTabItem
+        icon={<Calendar size={22} color={activeTab === 'Appointments' ? '#2563EB' : '#9CA3AF'} />}
+        label="Appointments"
+        isActive={activeTab === 'Appointments'}
+        onPress={onAppointments}
+      />
+      <BottomTabItem
+        icon={<Users size={22} color={activeTab === 'Doctors' ? '#2563EB' : '#9CA3AF'} />}
+        label="Doctors"
+        isActive={activeTab === 'Doctors'}
+        onPress={onDoctors}
+      />
+      <BottomTabItem
+        icon={<MessageSquare size={22} color={activeTab === 'Messages' ? '#2563EB' : '#9CA3AF'} />}
+        label="Messages"
+        isActive={activeTab === 'Messages'}
+      />
+      <BottomTabItem
+        icon={<User size={22} color={activeTab === 'Profile' ? '#2563EB' : '#9CA3AF'} />}
+        label="Profile"
+        isActive={activeTab === 'Profile'}
+      />
     </View>
   );
 };

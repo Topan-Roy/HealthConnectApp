@@ -34,7 +34,12 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
           <PatientHomeSpecialties searchQuery={searchQuery} />
         </ScrollView>
         </View>
-        <PatientHomeBottomNav onDoctors={onFindDoctor} onAppointments={onAppointments} />
+        <PatientHomeBottomNav
+          activeTab="Home"
+          onHome={() => {}}
+          onDoctors={onFindDoctor}
+          onAppointments={onAppointments}
+        />
       </SafeAreaView>
     </ImageBackground>
   );
