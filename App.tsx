@@ -22,6 +22,9 @@ import { BookingScreen } from './src/screens/patient/BookingScreen';
 import { BookingSummaryScreen } from './src/screens/patient/BookingSummaryScreen';
 import { PaymentScreen } from './src/screens/patient/PaymentScreen';
 import { AppointmentConfirmedScreen } from './src/screens/patient/AppointmentConfirmedScreen';
+import { MyAppointmentsScreen } from './src/screens/patient/MyAppointmentsScreen';
+import { AppointmentCompletedScreen } from './src/screens/patient/AppointmentCompletedScreen';
+import { RateReviewDoctorScreen } from './src/screens/patient/RateReviewDoctorScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -41,6 +44,9 @@ type ScreenState =
   | 'booking-summary'
   | 'payment'
   | 'appointment-confirmed'
+  | 'my-appointments'
+  | 'appointment-completed'
+  | 'rate-review-doctor'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -97,6 +103,15 @@ export default function App() {
           return true;
         case 'appointment-confirmed':
           setScreen('patient-home');
+          return true;
+        case 'my-appointments':
+          setScreen('patient-home');
+          return true;
+        case 'appointment-completed':
+          setScreen('my-appointments');
+          return true;
+        case 'rate-review-doctor':
+          setScreen('appointment-completed');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -210,6 +225,7 @@ export default function App() {
         <PatientHomeScreen
           onBack={() => setScreen('patient-login')}
           onFindDoctor={() => navigateTo('find-doctor')}
+          onAppointments={() => navigateTo('my-appointments')}
         />
       )}
 
@@ -272,8 +288,33 @@ export default function App() {
           doctor={selectedDoctor}
           selectedDate={bookingDate}
           selectedTime={bookingTime}
-          onViewAppointment={() => setScreen('patient-home')}
+          onViewAppointment={() => setScreen('my-appointments')}
           onBackToHome={() => setScreen('patient-home')}
+        />
+      )}
+
+      {/* 17. My Appointments */}
+      {screen === 'my-appointments' && (
+        <MyAppointmentsScreen
+          onBack={() => setScreen('patient-home')}
+          onJoinAppointment={() => setScreen('appointment-completed')} // Mocking join leading to completed for demo
+          onViewCompleted={() => setScreen('appointment-completed')}
+        />
+      )}
+
+      {/* 18. Appointment Completed */}
+      {screen === 'appointment-completed' && (
+        <AppointmentCompletedScreen
+          onBackToHome={() => setScreen('patient-home')}
+          onRateDoctor={() => setScreen('rate-review-doctor')}
+        />
+      )}
+
+      {/* 19. Rate and Review Doctor */}
+      {screen === 'rate-review-doctor' && (
+        <RateReviewDoctorScreen
+          onBack={() => setScreen('appointment-completed')}
+          onSubmitReview={() => setScreen('patient-home')}
         />
       )}
 

@@ -24,9 +24,10 @@ const BottomTabItem = ({
 
 interface PatientHomeBottomNavProps {
   onDoctors?: () => void;
+  onAppointments?: () => void;
 }
 
-export const PatientHomeBottomNav = ({ onDoctors }: PatientHomeBottomNavProps) => {
+export const PatientHomeBottomNav = ({ onDoctors, onAppointments }: PatientHomeBottomNavProps) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -49,7 +50,7 @@ export const PatientHomeBottomNav = ({ onDoctors }: PatientHomeBottomNavProps) =
       }}
     >
       <BottomTabItem icon={<Home size={22} color="#2563EB" />} label="Home" isActive />
-      <BottomTabItem icon={<Calendar size={22} color="#9CA3AF" />} label="Appointments" />
+      <BottomTabItem icon={<Calendar size={22} color="#9CA3AF" />} label="Appointments" onPress={onAppointments} />
       <BottomTabItem icon={<Users size={22} color="#9CA3AF" />} label="Doctors" onPress={onDoctors} />
       <BottomTabItem icon={<MessageSquare size={22} color="#9CA3AF" />} label="Messages" />
       <BottomTabItem icon={<User size={22} color="#9CA3AF" />} label="Profile" />
