@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   ScrollView,
   Image,
-  Platform,
+  ImageBackground,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   Filter,
@@ -17,71 +17,29 @@ import {
   Star,
   Settings2
 } from 'lucide-react-native';
-
-interface Doctor {
-  id: string;
-  name: string;
-  specialty: string;
-  experience: string;
-  rating: number;
-  price: string;
-  image: string;
-}
-
-const DOCTORS_DATA: Doctor[] = [
-  {
-    id: '1',
-    name: 'Dr. Sarah Ahmed',
-    specialty: 'Cardiologist',
-    experience: '8 Years',
-    rating: 4.8,
-    price: '800',
-    image: 'https://i.pravatar.cc/150?img=47'
-  },
-  {
-    id: '2',
-    name: 'Dr. James Wilson',
-    specialty: 'Neurologist',
-    experience: '10 Years',
-    rating: 4.7,
-    price: '700',
-    image: 'https://i.pravatar.cc/150?img=11'
-  },
-  {
-    id: '3',
-    name: 'Dr. Nabila Khan',
-    specialty: 'Dermatologist',
-    experience: '6 Years',
-    rating: 4.6,
-    price: '800',
-    image: 'https://i.pravatar.cc/150?img=5'
-  },
-  {
-    id: '4',
-    name: 'Dr. Fahim Ahmed',
-    specialty: 'Orthopedic',
-    experience: '9 Years',
-    rating: 4.5,
-    price: '700',
-    image: 'https://i.pravatar.cc/150?img=8'
-  }
-];
+import { DOCTORS_DATA, Doctor } from '../../data/doctors';
 
 const CATEGORIES = ['All', 'Cardiology', 'Neurology', 'Dermatology', 'Orthopedic'];
 
 interface FindDoctorScreenProps {
   onBack?: () => void;
+  onDoctorPress?: (doctor: Doctor) => void;
 }
 
-export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack }) => {
+export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack, onDoctorPress }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <ImageBackground
+      source={require('../../../assets/role_bg.jpg')}
+      className="flex-1"
+      resizeMode="cover"
+    >
+    <SafeAreaView className="flex-1">
       <View className="flex-1 px-4">
         {/* Header */}
-        <View className="flex-row justify-between items-center mt-7 ">
+        <View className="flex-row justify-between items-center mt-7">
           <TouchableOpacity onPress={onBack} className="p-2 -ml-2">
             <ArrowLeft size={24} color="#111827" />
           </TouchableOpacity>
@@ -91,7 +49,7 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack }) =>
         </View>
 
         {/* Title */}
-        <Text className="text-2xl font-bold text-gray-900 mb-6">
+        <Text className="text-2xl font-bold text-gray-900 mb-6 mt-4">
           Find Your Doctor
         </Text>
 
@@ -132,20 +90,21 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack }) =>
                 </TouchableOpacity>
               );
             })}
-            <View className="w-4" /> {/* Padding at the end */}
+            <View className="w-4" />
           </ScrollView>
         </View>
 
         {/* Doctor List */}
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
           {DOCTORS_DATA.filter(doctor => {
-            const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                  doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesCategory = activeCategory === 'All' || doctor.specialty === activeCategory;
             return matchesSearch && matchesCategory;
           }).map((doctor) => (
             <TouchableOpacity
               key={doctor.id}
+              onPress={() => onDoctorPress && onDoctorPress(doctor)}
               className="flex-row items-center p-4 bg-white rounded-3xl mb-4 border border-gray-100 shadow-sm shadow-gray-200/50"
               activeOpacity={0.7}
             >
@@ -191,6 +150,7 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ onBack }) =>
         </ScrollView>
       </View>
     </SafeAreaView>
+    </ImageBackground>
   );
 };
 

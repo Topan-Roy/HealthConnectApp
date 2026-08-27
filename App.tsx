@@ -17,6 +17,8 @@ import { ForgotPasswordScreen } from './src/screens/patient/ForgotPasswordScreen
 import { ResetPasswordScreen } from './src/screens/patient/ResetPasswordScreen';
 import { PatientHomeScreen } from './src/screens/patient/PatientHomeScreen';
 import { FindDoctorScreen } from './src/screens/patient/FindDoctorScreen';
+import { DoctorProfileScreen } from './src/screens/patient/DoctorProfileScreen';
+import { Doctor } from './src/data/doctors';
 
 type ScreenState =
   | 'splash'
@@ -30,6 +32,7 @@ type ScreenState =
   | 'setup-complete'
   | 'patient-home'
   | 'find-doctor'
+  | 'doctor-profile'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -37,6 +40,7 @@ type ScreenState =
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
   const [userRole, setUserRole] = useState<'patient' | 'doctor' | null>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   
   // To handle the back flow correctly when coming from different paths
   const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
@@ -68,6 +72,9 @@ export default function App() {
           return true;
         case 'find-doctor':
           setScreen('patient-home');
+          return true;
+        case 'doctor-profile':
+          setScreen('find-doctor');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -188,6 +195,18 @@ export default function App() {
       {screen === 'find-doctor' && (
         <FindDoctorScreen
           onBack={() => setScreen('patient-home')}
+          onDoctorPress={(doctor) => {
+            setSelectedDoctor(doctor);
+            navigateTo('doctor-profile');
+          }}
+        />
+      )}
+
+      {/* 12. Doctor Profile Screen */}
+      {screen === 'doctor-profile' && selectedDoctor && (
+        <DoctorProfileScreen
+          doctor={selectedDoctor}
+          onBack={() => setScreen('find-doctor')}
         />
       )}
 
