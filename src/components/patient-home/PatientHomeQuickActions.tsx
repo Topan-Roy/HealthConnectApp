@@ -11,11 +11,17 @@ const ActionItem = ({ icon, label, onPress }: { icon: React.ReactNode, label: st
   </TouchableOpacity>
 );
 
-export const PatientHomeQuickActions = ({ onFindDoctor }: { onFindDoctor?: () => void }) => {
+export const PatientHomeQuickActions = ({ 
+  onFindDoctor,
+  onAppointments
+}: { 
+  onFindDoctor?: () => void;
+  onAppointments?: () => void;
+}) => {
   return (
     <View className="flex-row justify-between mb-8">
       <ActionItem icon={<UserSearch size={24} color="#2563EB" />} label="Find Doctor" onPress={onFindDoctor} />
-      <ActionItem icon={<CalendarDays size={24} color="#2563EB" />} label="Appointments" />
+      <ActionItem icon={<CalendarDays size={24} color="#2563EB" />} label="Appointments" onPress={onAppointments} />
       <ActionItem icon={<Pill size={24} color="#2563EB" />} label="Medicines" />
       <ActionItem icon={<FileText size={24} color="#2563EB" />} label="Reports" />
     </View>
