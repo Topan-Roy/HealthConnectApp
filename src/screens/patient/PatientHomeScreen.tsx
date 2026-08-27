@@ -11,9 +11,10 @@ import { PatientHomeBottomNav } from '../../components/patient-home/PatientHomeB
 
 interface PatientHomeScreenProps {
   onBack?: () => void;
+  onFindDoctor?: () => void;
 }
 
-export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack }) => {
+export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, onFindDoctor }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -27,7 +28,7 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack }) 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
           <PatientHomeHeader onBack={onBack} />
           <PatientHomeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <PatientHomeQuickActions />
+          <PatientHomeQuickActions onFindDoctor={onFindDoctor} />
           <PatientHomeUpcoming />
           <PatientHomeSpecialties />
         </ScrollView>

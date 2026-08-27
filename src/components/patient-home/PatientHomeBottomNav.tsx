@@ -16,7 +16,7 @@ export const PatientHomeBottomNav = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View 
+    <View
       className="absolute flex-row justify-around items-center"
       style={{
         bottom: insets.bottom > 0 ? insets.bottom + 10 : 20,
@@ -35,7 +35,7 @@ export const PatientHomeBottomNav = () => {
       }}
     >
       <BottomTabItem icon={<Home size={22} color="#2563EB" />} label="Home" isActive />
-      <BottomTabItem icon={<Calendar size={22} color="#9CA3AF" />} label="Bookings" />
+      <BottomTabItem icon={<Calendar size={22} color="#9CA3AF" />} label="Appointments" />
       <BottomTabItem icon={<Users size={22} color="#9CA3AF" />} label="Doctors" />
       <BottomTabItem icon={<MessageSquare size={22} color="#9CA3AF" />} label="Messages" />
       <BottomTabItem icon={<User size={22} color="#9CA3AF" />} label="Profile" />

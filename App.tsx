@@ -16,6 +16,7 @@ import { SetupCompleteScreen } from './src/screens/patient/SetupCompleteScreen';
 import { ForgotPasswordScreen } from './src/screens/patient/ForgotPasswordScreen';
 import { ResetPasswordScreen } from './src/screens/patient/ResetPasswordScreen';
 import { PatientHomeScreen } from './src/screens/patient/PatientHomeScreen';
+import { FindDoctorScreen } from './src/screens/patient/FindDoctorScreen';
 
 type ScreenState =
   | 'splash'
@@ -28,6 +29,7 @@ type ScreenState =
   | 'profile-setup'
   | 'setup-complete'
   | 'patient-home'
+  | 'find-doctor'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -63,6 +65,9 @@ export default function App() {
         case 'forgot-password':
         case 'patient-home':
           setScreen('patient-login');
+          return true;
+        case 'find-doctor':
+          setScreen('patient-home');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -175,6 +180,14 @@ export default function App() {
       {screen === 'patient-home' && (
         <PatientHomeScreen
           onBack={() => setScreen('patient-login')}
+          onFindDoctor={() => navigateTo('find-doctor')}
+        />
+      )}
+
+      {/* 11. Find Doctor Screen */}
+      {screen === 'find-doctor' && (
+        <FindDoctorScreen
+          onBack={() => setScreen('patient-home')}
         />
       )}
 
