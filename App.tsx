@@ -1,8 +1,9 @@
 import './global.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { BackHandler } from 'react-native';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
@@ -34,13 +35,64 @@ type ScreenState =
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
   const [userRole, setUserRole] = useState<'patient' | 'doctor' | null>(null);
+  
+  // To handle the back flow correctly when coming from different paths
+  const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
+
+  const navigateTo = (nextScreen: ScreenState) => {
+    setPreviousScreen(screen);
+    setScreen(nextScreen);
+  };
+
+  useEffect(() => {
+    const backAction = () => {
+      switch (screen) {
+        case 'onboarding':
+          setScreen('splash');
+          return true;
+        case 'welcome':
+          setScreen('onboarding');
+          return true;
+        case 'role-selection':
+          setScreen('welcome');
+          return true;
+        case 'patient-login':
+          setScreen('role-selection');
+          return true;
+        case 'patient-signup':
+        case 'forgot-password':
+        case 'patient-home':
+          setScreen('patient-login');
+          return true;
+        case 'otp-verification':
+          setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
+          return true;
+        case 'profile-setup':
+          setScreen('otp-verification');
+          return true;
+        case 'forgot-password-otp':
+          setScreen('forgot-password');
+          return true;
+        case 'reset-password':
+          setScreen('patient-login');
+          return true;
+        case 'setup-complete':
+        case 'splash':
+        default:
+          return false; // Exit app
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, [screen, previousScreen]);
 
   const handleSelectRole = (role: 'patient' | 'doctor') => {
     setUserRole(role);
     if (role === 'patient') {
-      setScreen('patient-login');
+      navigateTo('patient-login');
     }
-    // Doctor: কোনো পেজ আসবে না এখনো
   };
 
   return (
