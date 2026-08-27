@@ -10,6 +10,7 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 
@@ -454,8 +455,13 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <ImageBackground
+      source={require('../../../assets/role_bg.jpg')}
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -532,6 +538,7 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };

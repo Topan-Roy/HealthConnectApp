@@ -216,7 +216,7 @@ export default function App() {
       {/* 9. Setup Complete Screen */}
       {screen === 'setup-complete' && (
         <SetupCompleteScreen
-          onGoToHome={() => setScreen('splash')}
+          onGoToLogin={() => setScreen('patient-login')}
         />
       )}
 

@@ -11,7 +11,7 @@ import {
 import Svg, { Path, Circle } from 'react-native-svg';
 
 interface SetupCompleteScreenProps {
-  onGoToHome: () => void;
+  onGoToLogin: () => void;
 }
 
 const CheckCircleIcon: React.FC = () => (
@@ -27,12 +27,14 @@ const CheckCircleIcon: React.FC = () => (
   </Svg>
 );
 
-export const SetupCompleteScreen: React.FC<SetupCompleteScreenProps> = ({ onGoToHome }) => {
+export const SetupCompleteScreen: React.FC<SetupCompleteScreenProps> = ({ onGoToLogin }) => {
   useEffect(() => {
-    // On this screen, hardware back does nothing (setup is complete)
-    const subscription = BackHandler.addEventListener('hardwareBackPress', () => true);
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      onGoToLogin();
+      return true;
+    });
     return () => subscription.remove();
-  }, []);
+  }, [onGoToLogin]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -102,7 +104,7 @@ export const SetupCompleteScreen: React.FC<SetupCompleteScreenProps> = ({ onGoTo
 
           {/* Go to Home Button */}
           <TouchableOpacity
-            onPress={onGoToHome}
+            onPress={onGoToLogin}
             activeOpacity={0.85}
             style={{
               backgroundColor: '#2563EB',
@@ -119,7 +121,7 @@ export const SetupCompleteScreen: React.FC<SetupCompleteScreenProps> = ({ onGoTo
             }}
           >
             <Text style={{ fontSize: 16, fontWeight: '700', color: '#FFFFFF', letterSpacing: 0.3 }}>
-              Go to Home
+              Go to Login
             </Text>
           </TouchableOpacity>
         </View>
