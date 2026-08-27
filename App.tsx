@@ -2,6 +2,7 @@ import './global.css';
 
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
@@ -13,6 +14,7 @@ import { ProfileSetupScreen } from './src/screens/patient/ProfileSetupScreen';
 import { SetupCompleteScreen } from './src/screens/patient/SetupCompleteScreen';
 import { ForgotPasswordScreen } from './src/screens/patient/ForgotPasswordScreen';
 import { ResetPasswordScreen } from './src/screens/patient/ResetPasswordScreen';
+import { PatientHomeScreen } from './src/screens/patient/PatientHomeScreen';
 
 type ScreenState =
   | 'splash'
@@ -24,6 +26,7 @@ type ScreenState =
   | 'otp-verification'
   | 'profile-setup'
   | 'setup-complete'
+  | 'patient-home'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -41,7 +44,7 @@ export default function App() {
   };
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style={screen === 'welcome' ? 'light' : 'dark'} />
 
       {/* 1. Splash Screen */}
@@ -78,7 +81,7 @@ export default function App() {
       {screen === 'patient-login' && (
         <PatientLoginScreen
           onBack={() => setScreen('role-selection')}
-          onLoginSuccess={() => setScreen('patient-login')}
+          onLoginSuccess={() => setScreen('patient-home')}
           onGoToSignup={() => setScreen('patient-signup')}
           onForgotPassword={() => setScreen('forgot-password')}
         />
@@ -116,6 +119,13 @@ export default function App() {
         />
       )}
 
+      {/* 10. Patient Home Screen */}
+      {screen === 'patient-home' && (
+        <PatientHomeScreen
+          onBack={() => setScreen('patient-login')}
+        />
+      )}
+
       {/* Forgot Password Flow */}
       {screen === 'forgot-password' && (
         <ForgotPasswordScreen
@@ -137,6 +147,6 @@ export default function App() {
           onResetSuccess={() => setScreen('patient-login')}
         />
       )}
-    </>
+    </SafeAreaProvider>
   );
 }
