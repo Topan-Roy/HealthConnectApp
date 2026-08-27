@@ -33,7 +33,7 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
           <PatientHomeSpecialties searchQuery={searchQuery} />
         </ScrollView>
         </View>
-        <PatientHomeBottomNav />
+        <PatientHomeBottomNav onDoctors={onFindDoctor} />
       </SafeAreaView>
     </ImageBackground>
   );

@@ -18,6 +18,7 @@ import { ResetPasswordScreen } from './src/screens/patient/ResetPasswordScreen';
 import { PatientHomeScreen } from './src/screens/patient/PatientHomeScreen';
 import { FindDoctorScreen } from './src/screens/patient/FindDoctorScreen';
 import { DoctorProfileScreen } from './src/screens/patient/DoctorProfileScreen';
+import { BookingScreen } from './src/screens/patient/BookingScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -33,6 +34,7 @@ type ScreenState =
   | 'patient-home'
   | 'find-doctor'
   | 'doctor-profile'
+  | 'booking'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -75,6 +77,9 @@ export default function App() {
           return true;
         case 'doctor-profile':
           setScreen('find-doctor');
+          return true;
+        case 'booking':
+          setScreen('doctor-profile');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -207,6 +212,16 @@ export default function App() {
         <DoctorProfileScreen
           doctor={selectedDoctor}
           onBack={() => setScreen('find-doctor')}
+          onBookAppointment={() => navigateTo('booking')}
+        />
+      )}
+
+      {/* 13. Booking Screen */}
+      {screen === 'booking' && selectedDoctor && (
+        <BookingScreen
+          doctor={selectedDoctor}
+          onBack={() => setScreen('doctor-profile')}
+          onConfirmed={() => setScreen('patient-home')}
         />
       )}
 
