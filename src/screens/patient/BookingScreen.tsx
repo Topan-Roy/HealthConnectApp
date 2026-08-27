@@ -7,7 +7,7 @@ import {
   ImageBackground,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   Heart,
@@ -20,7 +20,7 @@ import { Doctor } from '../../data/doctors';
 interface BookingScreenProps {
   doctor: Doctor;
   onBack?: () => void;
-  onConfirmed?: () => void;
+  onConfirmed?: (date: string, time: string) => void;
 }
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -41,6 +41,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ doctor, onBack, on
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState(today.getDate());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
 
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
@@ -68,14 +69,11 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ doctor, onBack, on
 
   const handleConfirm = () => {
     if (!selectedTime) {
-      Alert.alert('Select Time', 'Please select a time slot to continue.');
+      Alert.alert('⏰ Select Time', 'Please select a time slot to continue.');
       return;
     }
-    Alert.alert(
-      '✅ Appointment Booked!',
-      `Your appointment with ${doctor.name} is confirmed.\n\nDate: ${MONTHS[viewMonth]} ${selectedDate}, ${viewYear}\nTime: ${selectedTime}`,
-      [{ text: 'OK', onPress: onConfirmed }]
-    );
+    const formattedDate = `${DAYS[new Date(viewYear, viewMonth, selectedDate).getDay()]}, ${selectedDate} ${MONTHS[viewMonth].slice(0, 3)} ${viewYear}`;
+    onConfirmed && onConfirmed(formattedDate, selectedTime);
   };
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth);
@@ -195,10 +193,29 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ doctor, onBack, on
         </ScrollView>
 
         {/* Confirm Button */}
-        <View className="absolute bottom-0 left-0 right-0 px-4 pt-4 pb-8 bg-white border-t border-gray-100">
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            paddingHorizontal: 16,
+            paddingTop: 16,
+            paddingBottom: insets.bottom > 0 ? insets.bottom + 8 : 24,
+            backgroundColor: 'white',
+            borderTopWidth: 1,
+            borderTopColor: '#F3F4F6',
+          }}
+        >
           <TouchableOpacity
             onPress={handleConfirm}
-            className="bg-blue-600 rounded-2xl py-4 items-center justify-center"
+            style={{
+              backgroundColor: selectedTime ? '#2563EB' : '#93C5FD',
+              borderRadius: 16,
+              paddingVertical: 16,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             activeOpacity={0.85}
           >
             <Text className="text-white font-bold text-base">Continue</Text>

@@ -19,6 +19,9 @@ import { PatientHomeScreen } from './src/screens/patient/PatientHomeScreen';
 import { FindDoctorScreen } from './src/screens/patient/FindDoctorScreen';
 import { DoctorProfileScreen } from './src/screens/patient/DoctorProfileScreen';
 import { BookingScreen } from './src/screens/patient/BookingScreen';
+import { BookingSummaryScreen } from './src/screens/patient/BookingSummaryScreen';
+import { PaymentScreen } from './src/screens/patient/PaymentScreen';
+import { AppointmentConfirmedScreen } from './src/screens/patient/AppointmentConfirmedScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -35,6 +38,9 @@ type ScreenState =
   | 'find-doctor'
   | 'doctor-profile'
   | 'booking'
+  | 'booking-summary'
+  | 'payment'
+  | 'appointment-confirmed'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -43,6 +49,8 @@ export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
   const [userRole, setUserRole] = useState<'patient' | 'doctor' | null>(null);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [bookingDate, setBookingDate] = useState('');
+  const [bookingTime, setBookingTime] = useState('');
   
   // To handle the back flow correctly when coming from different paths
   const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
@@ -80,6 +88,15 @@ export default function App() {
           return true;
         case 'booking':
           setScreen('doctor-profile');
+          return true;
+        case 'booking-summary':
+          setScreen('booking');
+          return true;
+        case 'payment':
+          setScreen('booking-summary');
+          return true;
+        case 'appointment-confirmed':
+          setScreen('patient-home');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -221,7 +238,42 @@ export default function App() {
         <BookingScreen
           doctor={selectedDoctor}
           onBack={() => setScreen('doctor-profile')}
-          onConfirmed={() => setScreen('patient-home')}
+          onConfirmed={(date, time) => {
+            setBookingDate(date);
+            setBookingTime(time);
+            navigateTo('booking-summary');
+          }}
+        />
+      )}
+
+      {/* 14. Booking Summary */}
+      {screen === 'booking-summary' && selectedDoctor && (
+        <BookingSummaryScreen
+          doctor={selectedDoctor}
+          selectedDate={bookingDate}
+          selectedTime={bookingTime}
+          onBack={() => setScreen('booking')}
+          onProceed={() => navigateTo('payment')}
+        />
+      )}
+
+      {/* 15. Payment */}
+      {screen === 'payment' && selectedDoctor && (
+        <PaymentScreen
+          totalAmount={parseInt(selectedDoctor.price) + 50}
+          onBack={() => setScreen('booking-summary')}
+          onPaymentSuccess={() => navigateTo('appointment-confirmed')}
+        />
+      )}
+
+      {/* 16. Appointment Confirmed */}
+      {screen === 'appointment-confirmed' && selectedDoctor && (
+        <AppointmentConfirmedScreen
+          doctor={selectedDoctor}
+          selectedDate={bookingDate}
+          selectedTime={bookingTime}
+          onViewAppointment={() => setScreen('patient-home')}
+          onBackToHome={() => setScreen('patient-home')}
         />
       )}
 

@@ -7,7 +7,7 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   Heart,
@@ -32,6 +32,7 @@ export const DoctorProfileScreen: React.FC<DoctorProfileScreenProps> = ({
 }) => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const insets = useSafeAreaInsets();
 
   return (
     <ImageBackground
@@ -50,7 +51,7 @@ export const DoctorProfileScreen: React.FC<DoctorProfileScreenProps> = ({
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 120 }}>
         {/* Doctor Avatar & Name */}
         <View className="items-center px-4 mb-6">
           <View className="w-28 h-28 rounded-full bg-blue-50 border-4 border-blue-100 overflow-hidden mb-4">
@@ -114,7 +115,21 @@ export const DoctorProfileScreen: React.FC<DoctorProfileScreenProps> = ({
 
       {/* Bottom Actions */}
       <View
-        className="absolute bottom-0 left-0 right-0 flex-row items-center gap-4 px-4 pt-4 pb-6 bg-white border-t border-gray-100"
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+          paddingHorizontal: 16,
+          paddingTop: 16,
+          paddingBottom: insets.bottom > 0 ? insets.bottom + 8 : 24,
+          backgroundColor: 'white',
+          borderTopWidth: 1,
+          borderTopColor: '#F3F4F6',
+        }}
       >
         <TouchableOpacity
           className="flex-row items-center justify-center gap-2 border border-blue-600 rounded-2xl py-4 px-6"
