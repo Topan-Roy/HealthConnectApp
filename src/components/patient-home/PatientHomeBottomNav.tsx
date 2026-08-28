@@ -28,6 +28,7 @@ interface PatientHomeBottomNavProps {
   onDoctors?: () => void;
   onAppointments?: () => void;
   onMessages?: () => void;
+  onProfile?: () => void;
 }
 
 export const PatientHomeBottomNav = ({
@@ -36,6 +37,7 @@ export const PatientHomeBottomNav = ({
   onDoctors,
   onAppointments,
   onMessages,
+  onProfile,
 }: PatientHomeBottomNavProps) => {
   const insets = useSafeAreaInsets();
 
@@ -86,6 +88,7 @@ export const PatientHomeBottomNav = ({
         icon={<User size={22} color={activeTab === 'Profile' ? '#2563EB' : '#9CA3AF'} />}
         label="Profile"
         isActive={activeTab === 'Profile'}
+        onPress={onProfile}
       />
     </View>
   );
