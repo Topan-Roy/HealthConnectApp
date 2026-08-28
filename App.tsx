@@ -30,6 +30,7 @@ import { ChatScreen } from './src/screens/patient/ChatScreen';
 import { PatientProfileScreen } from './src/screens/patient/PatientProfileScreen';
 import { PersonalInfoScreen } from './src/screens/patient/PersonalInfoScreen';
 import { HealthInfoScreen } from './src/screens/patient/HealthInfoScreen';
+import { EmergencyContactScreen } from './src/screens/patient/EmergencyContactScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -57,6 +58,7 @@ type ScreenState =
   | 'patient-profile'
   | 'personal-info'
   | 'health-info'
+  | 'emergency-contact'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -132,6 +134,7 @@ export default function App() {
           return true;
         case 'personal-info':
         case 'health-info':
+        case 'emergency-contact':
           setScreen('patient-profile');
           return true;
         case 'chat':
@@ -384,6 +387,7 @@ export default function App() {
         <PatientProfileScreen
           onPersonalInfo={() => navigateTo('personal-info')}
           onHealthInfo={() => navigateTo('health-info')}
+          onEmergencyContact={() => navigateTo('emergency-contact')}
           onHome={() => setScreen('patient-home')}
           onFindDoctor={() => navigateTo('find-doctor')}
           onAppointments={() => navigateTo('my-appointments')}
@@ -398,6 +402,10 @@ export default function App() {
 
       {screen === 'health-info' && (
         <HealthInfoScreen onBack={() => setScreen('patient-profile')} />
+      )}
+
+      {screen === 'emergency-contact' && (
+        <EmergencyContactScreen onBack={() => setScreen('patient-profile')} />
       )}
 
       {/* Forgot Password Flow */}

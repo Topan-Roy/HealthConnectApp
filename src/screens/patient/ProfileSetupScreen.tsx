@@ -23,21 +23,13 @@ const TOTAL_STEPS = 5;
 
 // Step Indicator
 const StepIndicator: React.FC<{ current: number; total: number }> = ({ current, total }) => (
-  <View style={{ alignItems: 'center', marginBottom: 6 }}>
-    <Text style={{ fontSize: 12, color: '#48494dff', fontWeight: '500' }}>
+  <View className="mb-1.5 items-center">
+    <Text className="text-xs font-medium text-gray-600">
       Step {current} of {total}
     </Text>
-    <View style={{ flexDirection: 'row', gap: 6, marginTop: 8 }}>
+    <View className="mt-2 flex-row gap-1.5">
       {Array.from({ length: total }).map((_, i) => (
-        <View
-          key={i}
-          style={{
-            height: 4,
-            width: i < current ? 28 : 16,
-            borderRadius: 2,
-            backgroundColor: i < current ? '#2563EB' : '#E5E7EB',
-          }}
-        />
+        <View key={i} className={`h-1 rounded-sm ${i < current ? 'w-7 bg-primary' : 'w-4 bg-gray-200'}`} />
       ))}
     </View>
   </View>
@@ -53,8 +45,8 @@ const StyledInput: React.FC<{
 }> = ({ label, value, onChangeText, placeholder, keyboardType = 'default' }) => {
   const [focused, setFocused] = useState(false);
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 6 }}>
+    <View className="mb-4">
+      <Text className="mb-1.5 text-[13px] font-semibold text-gray-700">
         {label}
       </Text>
       <TextInput
@@ -65,16 +57,7 @@ const StyledInput: React.FC<{
         keyboardType={keyboardType}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        style={{
-          borderWidth: 1.5,
-          borderColor: focused ? '#2563EB' : '#E5E7EB',
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 13,
-          fontSize: 15,
-          color: '#111827',
-          backgroundColor: focused ? '#EFF6FF' : '#F9FAFB',
-        }}
+        className={`rounded-xl border-[1.5px] px-3.5 py-3 text-[15px] text-gray-900 ${focused ? 'border-primary bg-blue-50' : 'border-gray-200 bg-gray-50'}`}
       />
     </View>
   );
@@ -89,26 +72,16 @@ const StyledDropdown: React.FC<{
 }> = ({ label, value, options, onSelect }) => {
   const [open, setOpen] = useState(false);
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 6 }}>
+    <View className="mb-4">
+      <Text className="mb-1.5 text-[13px] font-semibold text-gray-700">
         {label}
       </Text>
       <TouchableOpacity
         onPress={() => setOpen(!open)}
         activeOpacity={0.8}
-        style={{
-          borderWidth: 1.5,
-          borderColor: open ? '#2563EB' : '#E5E7EB',
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 13,
-          backgroundColor: open ? '#EFF6FF' : '#F9FAFB',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
+        className={`flex-row items-center justify-between rounded-xl border-[1.5px] px-3.5 py-3 ${open ? 'border-primary bg-blue-50' : 'border-gray-200 bg-gray-50'}`}
       >
-        <Text style={{ fontSize: 15, color: value ? '#111827' : '#9CA3AF' }}>
+        <Text className={`text-[15px] ${value ? 'text-gray-900' : 'text-gray-400'}`}>
           {value || `Select ${label.toLowerCase()}`}
         </Text>
         <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
@@ -117,32 +90,15 @@ const StyledDropdown: React.FC<{
       </TouchableOpacity>
       {open && (
         <View
-          style={{
-            borderWidth: 1,
-            borderColor: '#E5E7EB',
-            borderRadius: 12,
-            backgroundColor: '#FFFFFF',
-            marginTop: 4,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.08,
-            shadowRadius: 8,
-            elevation: 4,
-            zIndex: 999,
-          }}
+          className="z-50 mt-1 rounded-xl border border-gray-200 bg-white shadow-lg"
         >
           {options.map(opt => (
             <TouchableOpacity
               key={opt}
               onPress={() => { onSelect(opt); setOpen(false); }}
-              style={{
-                paddingHorizontal: 14,
-                paddingVertical: 12,
-                borderBottomWidth: 1,
-                borderBottomColor: '#F3F4F6',
-              }}
+              className="border-b border-gray-100 px-3.5 py-3"
             >
-              <Text style={{ fontSize: 14, color: '#374151' }}>{opt}</Text>
+              <Text className="text-sm text-gray-700">{opt}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -153,31 +109,23 @@ const StyledDropdown: React.FC<{
 
 // Gender Radio
 const GenderRadio: React.FC<{ value: string; onChange: (v: string) => void }> = ({ value, onChange }) => (
-  <View style={{ marginBottom: 16 }}>
-    <Text style={{ fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 8 }}>Gender</Text>
-    <View style={{ flexDirection: 'row', gap: 12 }}>
+  <View className="mb-4">
+    <Text className="mb-2 text-[13px] font-semibold text-gray-700">Gender</Text>
+    <View className="flex-row gap-3">
       {['Male', 'Female', 'Other'].map(g => (
         <TouchableOpacity
           key={g}
           onPress={() => onChange(g)}
-          style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
+          className="flex-row items-center gap-1.5"
         >
           <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 10,
-              borderWidth: 2,
-              borderColor: value === g ? '#2563EB' : '#D1D5DB',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className={`h-5 w-5 items-center justify-center rounded-full border-2 ${value === g ? 'border-primary' : 'border-gray-300'}`}
           >
             {value === g && (
-              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#2563EB' }} />
+              <View className="h-2.5 w-2.5 rounded-full bg-primary" />
             )}
           </View>
-          <Text style={{ fontSize: 14, color: '#374151' }}>{g}</Text>
+          <Text className="text-sm text-gray-700">{g}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -212,21 +160,8 @@ const Step1: React.FC<{ data: any; setData: (d: any) => void }> = ({ data, setDa
 
 // Step 2: Profile Photo
 const Step2: React.FC = () => (
-  <View style={{ alignItems: 'center', paddingVertical: 16 }}>
-    <View
-      style={{
-        width: 140,
-        height: 140,
-        borderRadius: 70,
-        backgroundColor: '#EFF6FF',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 28,
-        borderWidth: 3,
-        borderColor: '#BFDBFE',
-        borderStyle: 'dashed',
-      }}
-    >
+  <View className="items-center py-4">
+    <View className="mb-7 h-[140px] w-[140px] items-center justify-center rounded-full border-[3px] border-dashed border-blue-200 bg-blue-50">
       <Svg width={56} height={56} viewBox="0 0 24 24" fill="none">
         <Circle cx={12} cy={8} r={4} stroke="#2563EB" strokeWidth={1.5} />
         <Path
@@ -240,23 +175,7 @@ const Step2: React.FC = () => (
 
     <TouchableOpacity
       activeOpacity={0.85}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        backgroundColor: '#2563EB',
-        borderRadius: 12,
-        paddingVertical: 14,
-        paddingHorizontal: 28,
-        marginBottom: 12,
-        width: '100%',
-        justifyContent: 'center',
-        shadowColor: '#2563EB',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 6,
-      }}
+      className="mb-3 w-full flex-row items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 shadow-lg shadow-primary/30"
     >
       <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
         <Path
@@ -267,24 +186,12 @@ const Step2: React.FC = () => (
         />
         <Circle cx={12} cy={13} r={4} stroke="#FFFFFF" strokeWidth={1.8} />
       </Svg>
-      <Text style={{ fontSize: 15, fontWeight: '600', color: '#FFFFFF' }}>Take Photo</Text>
+      <Text className="text-[15px] font-semibold text-white">Take Photo</Text>
     </TouchableOpacity>
 
     <TouchableOpacity
       activeOpacity={0.85}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        borderWidth: 1.5,
-        borderColor: '#2563EB',
-        borderRadius: 12,
-        paddingVertical: 14,
-        paddingHorizontal: 28,
-        width: '100%',
-        justifyContent: 'center',
-        backgroundColor: '#EFF6FF',
-      }}
+      className="w-full flex-row items-center justify-center gap-2 rounded-xl border-[1.5px] border-primary bg-blue-50 px-7 py-3.5"
     >
       <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
         <Path
@@ -304,7 +211,7 @@ const Step2: React.FC = () => (
         </Svg>
         <Path d="M2 4h20v16H2z" stroke="#2563EB" strokeWidth={1.8} strokeLinecap="round" />
       </Svg>
-      <Text style={{ fontSize: 15, fontWeight: '600', color: '#2563EB' }}>Choose from Gallery</Text>
+      <Text className="text-[15px] font-semibold text-primary">Choose from Gallery</Text>
     </TouchableOpacity>
   </View>
 );
@@ -399,7 +306,7 @@ const Step5: React.FC<{ data: any; setData: (d: any) => void }> = ({ data, setDa
       onChangeText={v => setData({ ...data, address: v })}
       placeholder="Enter your full address"
     />
-    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+    <TouchableOpacity className="mt-1 flex-row items-center gap-1.5">
       <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
         <Path
           d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
@@ -408,7 +315,7 @@ const Step5: React.FC<{ data: any; setData: (d: any) => void }> = ({ data, setDa
         />
         <Circle cx={12} cy={9} r={2.5} stroke="#2563EB" strokeWidth={1.8} />
       </Svg>
-      <Text style={{ fontSize: 13, color: '#2563EB', fontWeight: '600' }}>Use Current Location</Text>
+      <Text className="text-[13px] font-semibold text-primary">Use Current Location</Text>
     </TouchableOpacity>
   </View>
 );
@@ -455,39 +362,15 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
   };
 
   return (
-    <ImageBackground
-      source={require('../../../assets/role_bg.jpg')}
-      style={{ flex: 1 }}
-      resizeMode="cover"
-    >
-      <SafeAreaView style={{ flex: 1 }}>
+    <ImageBackground source={require('../../../assets/role_bg.jpg')} className="flex-1" resizeMode="cover">
+      <SafeAreaView className="flex-1">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {/* Header */}
-        <View
-          style={{
-            paddingHorizontal: 24,
-            paddingTop: 20,
-            paddingBottom: 16,
-            borderBottomWidth: 1,
-            borderBottomColor: '#F3F4F6',
-          }}
-        >
+        <View className="border-b border-gray-100 px-6 pb-4 pt-5">
           <StepIndicator current={step} total={TOTAL_STEPS} />
-          <Text
-            style={{
-              fontSize: 22,
-              fontWeight: '700',
-              color: '#111827',
-              textAlign: 'center',
-              marginTop: 12,
-              letterSpacing: -0.3,
-            }}
-          >
+          <Text className="mt-3 text-center text-[22px] font-bold text-gray-900">
             {stepTitles[step - 1]}
           </Text>
         </View>
@@ -495,7 +378,7 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 40 }}
+          contentContainerClassName="px-6 pb-10 pt-6"
         >
           {step === 1 && <Step1 data={personalData} setData={setPersonalData} />}
           {step === 2 && <Step2 />}
@@ -504,23 +387,13 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
           {step === 5 && <Step5 data={addressData} setData={setAddressData} />}
 
           {/* Next / Skip (Step 2) */}
-          <View style={{ marginTop: 24 }}>
+          <View className="mt-6">
             <TouchableOpacity
               onPress={handleNext}
               activeOpacity={0.85}
-              style={{
-                backgroundColor: '#2563EB',
-                borderRadius: 14,
-                paddingVertical: 16,
-                alignItems: 'center',
-                shadowColor: '#2563EB',
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.3,
-                shadowRadius: 12,
-                elevation: 8,
-              }}
+              className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30"
             >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: '#FFFFFF' }}>
+              <Text className="text-base font-bold text-white">
                 {step === TOTAL_STEPS ? 'Next' : 'Next'}
               </Text>
             </TouchableOpacity>
@@ -528,9 +401,9 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
             {step === 2 && (
               <TouchableOpacity
                 onPress={() => setStep(3)}
-                style={{ alignItems: 'center', marginTop: 16 }}
+                className="mt-4 items-center"
               >
-                <Text style={{ fontSize: 14, color: '#48494dff', fontWeight: '500' }}>
+                <Text className="text-sm font-medium text-gray-600">
                   Skip for now
                 </Text>
               </TouchableOpacity>
