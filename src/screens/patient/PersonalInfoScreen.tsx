@@ -29,7 +29,12 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
       <SafeAreaView className="flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between px-4 py-3">
-          <TouchableOpacity onPress={onBack} className="p-1.5">
+          <TouchableOpacity
+            onPress={() => onBack?.()}
+            hitSlop={10}
+            activeOpacity={0.6}
+            className="p-1.5"
+          >
             <ArrowLeft size={22} color="#111827" />
           </TouchableOpacity>
           <Text className="text-[17px] font-bold text-gray-900">Personal Information</Text>

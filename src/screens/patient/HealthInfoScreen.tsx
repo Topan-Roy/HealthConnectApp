@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import {
-  View, Text, TouchableOpacity, ScrollView,
-  ImageBackground, TextInput, StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Droplets, Activity, Scale, Ruler, Cigarette, Wine } from 'lucide-react-native';
+import { ArrowLeft, Droplets, Cigarette, Wine } from 'lucide-react-native';
 
 interface HealthInfoScreenProps {
   onBack?: () => void;
 }
+
+const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const INPUT_CLASS = 'mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm';
+const LABEL_CLASS = 'mb-1 text-[11px] font-semibold uppercase text-gray-400';
+const VALUE_CLASS = 'text-[15px] font-medium text-gray-900';
 
 export const HealthInfoScreen: React.FC<HealthInfoScreenProps> = ({ onBack }) => {
   const [bloodGroup, setBloodGroup] = useState('B+');
@@ -19,166 +21,88 @@ export const HealthInfoScreen: React.FC<HealthInfoScreenProps> = ({ onBack }) =>
   const [smoking, setSmoking] = useState('No');
   const [alcohol, setAlcohol] = useState('No');
 
-  const BLOOD_GROUPS = ['A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−'];
-
-  const basicFields = [
-    { label: 'Weight', value: weight, setter: setWeight, icon: Scale, placeholder: 'e.g. 72 kg' },
-    { label: 'Height', value: height, setter: setHeight, icon: Ruler, placeholder: 'e.g. 175 cm' },
-    { label: 'Allergies', value: allergies, setter: setAllergies, icon: Activity, placeholder: 'List any allergies' },
-    { label: 'Medical Conditions', value: conditions, setter: setConditions, icon: Activity, placeholder: 'e.g. Diabetes, Hypertension' },
-  ];
-
   return (
-    <ImageBackground source={require('../../../assets/role_bg.jpg')} style={{ flex: 1 }} resizeMode="cover">
-      <SafeAreaView style={{ flex: 1 }}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onBack} style={styles.backBtn}>
+    <ImageBackground source={require('../../../assets/role_bg.jpg')} className="flex-1" resizeMode="cover">
+      <SafeAreaView className="flex-1">
+        <View className="flex-row items-center justify-between px-4 py-3">
+          <TouchableOpacity onPress={onBack} className="p-1.5">
             <ArrowLeft size={22} color="#111827" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Health Information</Text>
-          <View style={{ width: 36 }} />
+          <Text className="text-[17px] font-bold text-gray-900">Health Information</Text>
+          <View className="w-9" />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-          {/* Blood Group */}
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
+          <View className="mb-4 rounded-2xl bg-white/45 px-4 py-4 shadow-sm">
+            <View className="mb-3 flex-row items-center gap-2">
               <Droplets size={18} color="#EF4444" />
-              <Text style={styles.sectionTitle}>Blood Group</Text>
+              <Text className="text-sm font-bold text-gray-700">Blood Group</Text>
             </View>
-            <View style={styles.bloodGrid}>
-              {BLOOD_GROUPS.map((bg) => (
-                <TouchableOpacity
-                  key={bg}
-                  onPress={() => setBloodGroup(bg)}
-                  style={[styles.bloodChip, bloodGroup === bg && styles.bloodChipActive]}
-                >
-                  <Text style={[styles.bloodChipText, bloodGroup === bg && styles.bloodChipTextActive]}>{bg}</Text>
+            <View className="flex-row flex-wrap gap-2.5">
+              {BLOOD_GROUPS.map((group) => (
+                <TouchableOpacity key={group} onPress={() => setBloodGroup(group)} className={`rounded-full px-4 py-2 ${bloodGroup === group ? 'bg-red-500' : 'bg-white/55'}`}>
+                  <Text className={`text-[13px] font-semibold ${bloodGroup === group ? 'text-white' : 'text-gray-700'}`}>{group}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
-          {/* Basic fields */}
-          <View style={styles.card}>
-            {basicFields.map((f, i) => {
-              const IconComp = f.icon;
-              return (
-                <View key={i} style={[styles.fieldWrap, i < basicFields.length - 1 && styles.fieldBorder]}>
-                  <Text style={styles.fieldLabel}>{f.label}</Text>
-                  <TextInput
-                    value={f.value}
-                    onChangeText={f.setter}
-                    placeholder={f.placeholder}
-                    placeholderTextColor="#9CA3AF"
-                    style={styles.fieldInput}
-                  />
-                </View>
-              );
-            })}
+          <View className="mb-2">
+            <View className={INPUT_CLASS}>
+              <Text className={LABEL_CLASS}>Weight</Text>
+              <TextInput value={weight} onChangeText={setWeight} placeholder="e.g. 72 kg" placeholderTextColor="#9CA3AF" className={VALUE_CLASS} />
+            </View>
+            <View className={INPUT_CLASS}>
+              <Text className={LABEL_CLASS}>Height</Text>
+              <TextInput value={height} onChangeText={setHeight} placeholder="e.g. 175 cm" placeholderTextColor="#9CA3AF" className={VALUE_CLASS} />
+            </View>
+            <View className={INPUT_CLASS}>
+              <Text className={LABEL_CLASS}>Allergies</Text>
+              <TextInput value={allergies} onChangeText={setAllergies} placeholder="List any allergies" placeholderTextColor="#9CA3AF" className={VALUE_CLASS} />
+            </View>
+            <View className={INPUT_CLASS}>
+              <Text className={LABEL_CLASS}>Medical Conditions</Text>
+              <TextInput value={conditions} onChangeText={setConditions} placeholder="e.g. Diabetes, Hypertension" placeholderTextColor="#9CA3AF" className={VALUE_CLASS} />
+            </View>
           </View>
 
-          {/* Lifestyle */}
-          <View style={styles.card}>
-            <Text style={[styles.sectionTitle, { marginBottom: 12, color: '#374151' }]}>Lifestyle</Text>
-
-            {/* Smoking */}
-            <View style={[styles.fieldWrap, styles.fieldBorder]}>
-              <View style={styles.lifestyleRow}>
+          <View className="mb-4 rounded-2xl bg-white/45 px-4 py-4 shadow-sm">
+            <Text className="mb-3 text-sm font-bold text-gray-700">Lifestyle</Text>
+            <View className="mb-4">
+              <View className="mb-2 flex-row items-center gap-1.5">
                 <Cigarette size={16} color="#6B7280" />
-                <Text style={styles.lifestyleLabel}>Smoking</Text>
+                <Text className="text-sm font-semibold text-gray-700">Smoking</Text>
               </View>
-              <View style={styles.toggleRow}>
-                {['No', 'Occasionally', 'Yes'].map((opt) => (
-                  <TouchableOpacity
-                    key={opt}
-                    onPress={() => setSmoking(opt)}
-                    style={[styles.toggleChip, smoking === opt && styles.toggleChipActive]}
-                  >
-                    <Text style={[styles.toggleText, smoking === opt && styles.toggleTextActive]}>{opt}</Text>
+              <View className="flex-row gap-2">
+                {['No', 'Occasionally', 'Yes'].map((option) => (
+                  <TouchableOpacity key={option} onPress={() => setSmoking(option)} className={`rounded-full px-3.5 py-1.5 ${smoking === option ? 'bg-primary' : 'bg-white/55'}`}>
+                    <Text className={`text-xs font-semibold ${smoking === option ? 'text-white' : 'text-gray-700'}`}>{option}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
-
-            {/* Alcohol */}
-            <View style={styles.fieldWrap}>
-              <View style={styles.lifestyleRow}>
+            <View>
+              <View className="mb-2 flex-row items-center gap-1.5">
                 <Wine size={16} color="#6B7280" />
-                <Text style={styles.lifestyleLabel}>Alcohol</Text>
+                <Text className="text-sm font-semibold text-gray-700">Alcohol</Text>
               </View>
-              <View style={styles.toggleRow}>
-                {['No', 'Occasionally', 'Yes'].map((opt) => (
-                  <TouchableOpacity
-                    key={opt}
-                    onPress={() => setAlcohol(opt)}
-                    style={[styles.toggleChip, alcohol === opt && styles.toggleChipActive]}
-                  >
-                    <Text style={[styles.toggleText, alcohol === opt && styles.toggleTextActive]}>{opt}</Text>
+              <View className="flex-row gap-2">
+                {['No', 'Occasionally', 'Yes'].map((option) => (
+                  <TouchableOpacity key={option} onPress={() => setAlcohol(option)} className={`rounded-full px-3.5 py-1.5 ${alcohol === option ? 'bg-primary' : 'bg-white/55'}`}>
+                    <Text className={`text-xs font-semibold ${alcohol === option ? 'text-white' : 'text-gray-700'}`}>{option}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save Changes</Text>
+          <TouchableOpacity className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30">
+            <Text className="text-base font-bold text-white">Save Changes</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 12,
-  },
-  backBtn: { padding: 6, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.85)' },
-  headerTitle: { fontSize: 17, fontWeight: '700', color: '#111827' },
-  scroll: { paddingHorizontal: 20, paddingBottom: 40 },
-  card: {
-    backgroundColor: 'rgba(255,255,255,0.96)', borderRadius: 20,
-    paddingHorizontal: 18, paddingVertical: 16,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.07, shadowRadius: 10, elevation: 4,
-    marginBottom: 16,
-  },
-  sectionRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 },
-  sectionTitle: { fontSize: 14, fontWeight: '700', color: '#374151' },
-  bloodGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  bloodChip: {
-    paddingHorizontal: 16, paddingVertical: 8,
-    borderRadius: 20, borderWidth: 1.5, borderColor: '#E5E7EB',
-    backgroundColor: '#F9FAFB',
-  },
-  bloodChipActive: { backgroundColor: '#EF4444', borderColor: '#EF4444' },
-  bloodChipText: { fontSize: 13, fontWeight: '600', color: '#374151' },
-  bloodChipTextActive: { color: '#fff' },
-  fieldWrap: { paddingVertical: 12 },
-  fieldBorder: { borderBottomWidth: 1, borderBottomColor: '#F3F4F6' },
-  fieldLabel: { fontSize: 11, fontWeight: '600', color: '#9CA3AF', marginBottom: 4, textTransform: 'uppercase' },
-  fieldInput: { fontSize: 15, color: '#111827', fontWeight: '500' },
-  lifestyleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
-  lifestyleLabel: { fontSize: 14, fontWeight: '600', color: '#374151' },
-  toggleRow: { flexDirection: 'row', gap: 8 },
-  toggleChip: {
-    paddingHorizontal: 14, paddingVertical: 6,
-    borderRadius: 16, borderWidth: 1.5, borderColor: '#E5E7EB',
-    backgroundColor: '#F9FAFB',
-  },
-  toggleChipActive: { backgroundColor: '#2563EB', borderColor: '#2563EB' },
-  toggleText: { fontSize: 12, fontWeight: '600', color: '#374151' },
-  toggleTextActive: { color: '#fff' },
-  saveBtn: {
-    backgroundColor: '#2563EB', borderRadius: 16,
-    paddingVertical: 16, alignItems: 'center',
-    shadowColor: '#2563EB', shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3, shadowRadius: 8, elevation: 5,
-  },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-});
 
 export default HealthInfoScreen;
