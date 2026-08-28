@@ -13,9 +13,10 @@ interface PatientHomeScreenProps {
   onBack?: () => void;
   onFindDoctor?: () => void;
   onAppointments?: () => void;
+  onMessages?: () => void;
 }
 
-export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, onFindDoctor, onAppointments }) => {
+export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, onFindDoctor, onAppointments, onMessages }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -39,6 +40,7 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
           onHome={() => {}}
           onDoctors={onFindDoctor}
           onAppointments={onAppointments}
+          onMessages={onMessages}
         />
       </SafeAreaView>
     </ImageBackground>
@@ -46,3 +48,4 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
 };
 
 export default PatientHomeScreen;
+

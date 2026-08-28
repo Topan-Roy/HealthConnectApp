@@ -23,12 +23,14 @@ interface DoctorProfileScreenProps {
   doctor: Doctor;
   onBack?: () => void;
   onBookAppointment?: (doctor: Doctor) => void;
+  onChat?: (doctor: Doctor) => void;
 }
 
 export const DoctorProfileScreen: React.FC<DoctorProfileScreenProps> = ({
   doctor,
   onBack,
   onBookAppointment,
+  onChat,
 }) => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -132,6 +134,7 @@ export const DoctorProfileScreen: React.FC<DoctorProfileScreenProps> = ({
         }}
       >
         <TouchableOpacity
+          onPress={() => onChat && onChat(doctor)}
           className="flex-row items-center justify-center gap-2 border border-blue-600 rounded-2xl py-4 px-6"
           activeOpacity={0.8}
         >

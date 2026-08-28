@@ -25,6 +25,8 @@ import { AppointmentConfirmedScreen } from './src/screens/patient/AppointmentCon
 import { MyAppointmentsScreen } from './src/screens/patient/MyAppointmentsScreen';
 import { AppointmentCompletedScreen } from './src/screens/patient/AppointmentCompletedScreen';
 import { RateReviewDoctorScreen } from './src/screens/patient/RateReviewDoctorScreen';
+import { MessagesListScreen } from './src/screens/patient/MessagesListScreen';
+import { ChatScreen } from './src/screens/patient/ChatScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -47,6 +49,8 @@ type ScreenState =
   | 'my-appointments'
   | 'appointment-completed'
   | 'rate-review-doctor'
+  | 'messages-list'
+  | 'chat'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -57,6 +61,7 @@ export default function App() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [bookingDate, setBookingDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
+  const [chatDoctor, setChatDoctor] = useState<Doctor | null>(null);
   
   // To handle the back flow correctly when coming from different paths
   const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
@@ -112,6 +117,12 @@ export default function App() {
           return true;
         case 'rate-review-doctor':
           setScreen('appointment-completed');
+          return true;
+        case 'messages-list':
+          setScreen('patient-home');
+          return true;
+        case 'chat':
+          setScreen('messages-list');
           return true;
         case 'otp-verification':
           setScreen(previousScreen === 'forgot-password' ? 'forgot-password' : 'patient-signup');
@@ -226,6 +237,7 @@ export default function App() {
           onBack={() => setScreen('patient-login')}
           onFindDoctor={() => navigateTo('find-doctor')}
           onAppointments={() => navigateTo('my-appointments')}
+          onMessages={() => navigateTo('messages-list')}
         />
       )}
 
@@ -248,6 +260,10 @@ export default function App() {
           doctor={selectedDoctor}
           onBack={() => setScreen('find-doctor')}
           onBookAppointment={() => navigateTo('booking')}
+          onChat={(doctor) => {
+            setChatDoctor(doctor);
+            navigateTo('chat');
+          }}
         />
       )}
 
@@ -319,6 +335,25 @@ export default function App() {
         <RateReviewDoctorScreen
           onBack={() => setScreen('appointment-completed')}
           onSubmitReview={() => setScreen('patient-home')}
+        />
+      )}
+
+      {/* 20. Messages List (Inbox) */}
+      {screen === 'messages-list' && (
+        <MessagesListScreen
+          onBack={() => setScreen('patient-home')}
+          onOpenChat={(doctor) => {
+            setChatDoctor(doctor);
+            navigateTo('chat');
+          }}
+        />
+      )}
+
+      {/* 21. Chat Screen */}
+      {screen === 'chat' && chatDoctor && (
+        <ChatScreen
+          doctor={chatDoctor}
+          onBack={() => setScreen('messages-list')}
         />
       )}
 
