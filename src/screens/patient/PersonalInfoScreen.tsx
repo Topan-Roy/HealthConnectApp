@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Camera } from 'lucide-react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface PersonalInfoScreenProps {
   onBack?: () => void;
@@ -17,22 +18,18 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
   const [dob, setDob] = useState('12 Jan 1995');
   const [gender, setGender] = useState('Male');
   const [address, setAddress] = useState('Dhaka, Bangladesh');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [birthDate, setBirthDate] = useState(new Date(1995, 0, 12));
 
-  const fields = [
-    { label: 'Full Name', value: name, setter: setName, placeholder: 'Enter full name' },
-    { label: 'Phone Number', value: phone, setter: setPhone, placeholder: 'Enter phone number' },
-    { label: 'Email Address', value: email, setter: setEmail, placeholder: 'Enter email' },
-    { label: 'Date of Birth', value: dob, setter: setDob, placeholder: 'DD MMM YYYY' },
-    { label: 'Gender', value: gender, setter: setGender, placeholder: 'Male / Female' },
-    { label: 'Address', value: address, setter: setAddress, placeholder: 'Enter address' },
-  ];
+  const formatBirthDate = (date: Date) =>
+    date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   return (
     <ImageBackground source={require('../../../assets/role_bg.jpg')} className="flex-1" resizeMode="cover">
       <SafeAreaView className="flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between px-4 py-3">
-          <TouchableOpacity onPress={onBack} className=" bg-white/85 p-1.5">
+          <TouchableOpacity onPress={onBack} className="p-1.5">
             <ArrowLeft size={22} color="#111827" />
           </TouchableOpacity>
           <Text className="text-[17px] font-bold text-gray-900">Personal Information</Text>
@@ -58,19 +55,54 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
           </View>
 
           {/* Fields */}
-          <View className="mb-5  px-[18px] py-1 ">
-            {fields.map((f, i) => (
-              <View key={i} className={`py-3.5 ${i < fields.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">{f.label}</Text>
+          <View className="mb-5">
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Full Name</Text>
+              <TextInput value={name} onChangeText={setName} placeholder="Enter full name" placeholderTextColor="#9CA3AF" className="text-[15px] font-medium text-gray-900" />
+            </View>
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Phone Number</Text>
+              <TextInput value={phone} onChangeText={setPhone} placeholder="Enter phone number" placeholderTextColor="#9CA3AF" className="text-[15px] font-medium text-gray-900" />
+            </View>
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Email Address</Text>
+              <TextInput value={email} onChangeText={setEmail} placeholder="Enter email" placeholderTextColor="#9CA3AF" className="text-[15px] font-medium text-gray-900" />
+            </View>
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Date of Birth</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                 <TextInput
-                  value={f.value}
-                  onChangeText={f.setter}
-                  placeholder={f.placeholder}
+                  value={dob}
+                  placeholder="DD MMM YYYY"
                   placeholderTextColor="#9CA3AF"
+                  editable={false}
+                  pointerEvents="none"
                   className="text-[15px] font-medium text-gray-900"
                 />
-              </View>
-            ))}
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={birthDate}
+                  mode="date"
+                  display="calendar"
+                  onChange={(event, selectedDate) => {
+                    setShowDatePicker(false);
+                    if (selectedDate) {
+                      setBirthDate(selectedDate);
+                      setDob(formatBirthDate(selectedDate));
+                    }
+                  }}
+                />
+              )}
+            </View>
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Gender</Text>
+              <TextInput value={gender} onChangeText={setGender} placeholder="Male / Female" placeholderTextColor="#9CA3AF" className="text-[15px] font-medium text-gray-900" />
+            </View>
+            <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
+              <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Address</Text>
+              <TextInput value={address} onChangeText={setAddress} placeholder="Enter address" placeholderTextColor="#9CA3AF" className="text-[15px] font-medium text-gray-900" />
+            </View>
           </View>
 
           <TouchableOpacity className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30">
