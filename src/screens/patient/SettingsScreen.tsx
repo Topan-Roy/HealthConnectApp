@@ -3,9 +3,9 @@ import { ImageBackground, ScrollView, Switch, Text, TouchableOpacity, View } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Bell, Lock, Moon, Shield } from 'lucide-react-native';
 
-interface SettingsScreenProps { onBack?: () => void; }
+interface SettingsScreenProps { onBack?: () => void; onChangePassword?: () => void; onPrivacySecurity?: () => void; }
 
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack, onChangePassword, onPrivacySecurity }) => {
   const [notifications, setNotifications] = useState(true);
   const [reminders, setReminders] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -35,8 +35,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
             </View>
           </View>
           <Text className="mb-3 mt-6 text-sm font-semibold text-gray-700">Security</Text>
-          <TouchableOpacity className="mb-3 flex-row items-center rounded-2xl bg-white/45 px-4 py-4 shadow-sm"><Lock size={20} color="#2563EB" /><Text className="ml-3 flex-1 text-sm font-semibold text-gray-700">Change Password</Text><Text className="text-gray-400">›</Text></TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center rounded-2xl bg-white/45 px-4 py-4 shadow-sm"><Shield size={20} color="#2563EB" /><Text className="ml-3 flex-1 text-sm font-semibold text-gray-700">Privacy & Security</Text><Text className="text-gray-400">›</Text></TouchableOpacity>
+          <TouchableOpacity onPress={onChangePassword} className="mb-3 flex-row items-center rounded-2xl bg-white/45 px-4 py-4 shadow-sm"><Lock size={20} color="#2563EB" /><Text className="ml-3 flex-1 text-sm font-semibold text-gray-700">Change Password</Text><Text className="text-gray-400">›</Text></TouchableOpacity>
+          <TouchableOpacity onPress={onPrivacySecurity} className="flex-row items-center rounded-2xl bg-white/45 px-4 py-4 shadow-sm"><Shield size={20} color="#2563EB" /><Text className="ml-3 flex-1 text-sm font-semibold text-gray-700">Privacy & Security</Text><Text className="text-gray-400">›</Text></TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
