@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   Image,
+  ImageBackground,
   Alert,
   StyleSheet,
 } from 'react-native';
@@ -23,6 +24,8 @@ import { PatientHomeBottomNav } from '../../components/patient-home/PatientHomeB
 
 interface PatientProfileScreenProps {
   onBack?: () => void;
+  onPersonalInfo?: () => void;
+  onHealthInfo?: () => void;
   onHome?: () => void;
   onFindDoctor?: () => void;
   onAppointments?: () => void;
@@ -40,14 +43,14 @@ const MENU_ITEMS = [
 ];
 
 export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
+  onPersonalInfo,
+  onHealthInfo,
   onHome,
   onFindDoctor,
   onAppointments,
   onMessages,
   onLogout,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -60,30 +63,22 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {/* ── Page title ── */}
-      <View style={styles.pageHeader}>
-        <Text style={styles.pageTitle}>Profile</Text>
-      </View>
+    <ImageBackground
+      source={require('../../../assets/role_bg.jpg')}
+      className="flex-1"
+      resizeMode="cover"
+    >
+      <SafeAreaView className="flex-1 bg-transparent">
+        <View className="items-center pt-2.5 pb-2">
+          <Text className="text-[19px] font-bold text-primary">Profile</Text>
+        </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 120 }}
       >
         {/* ── Main card ── */}
-        <View style={styles.card}>
-
-          {/* Favourite heart – top-right of card */}
-          <TouchableOpacity
-            onPress={() => setIsFavorite(!isFavorite)}
-            style={styles.heartBtn}
-          >
-            <Heart
-              size={20}
-              color={isFavorite ? '#EF4444' : '#9CA3AF'}
-              fill={isFavorite ? '#EF4444' : 'none'}
-            />
-          </TouchableOpacity>
+        <View className="px-[18px] pt-[18px] pb-1">
 
           {/* ── Avatar ── */}
           <View style={styles.avatarWrap}>
@@ -109,10 +104,12 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
           {/* ── Menu rows ── */}
           {MENU_ITEMS.map(({ id, Icon, label }, index) => {
             const isLast = index === MENU_ITEMS.length - 1;
+            const onPress = id === 'personal' ? onPersonalInfo : id === 'health' ? onHealthInfo : undefined;
             return (
               <TouchableOpacity
                 key={id}
                 activeOpacity={0.65}
+                onPress={onPress}
                 style={[styles.menuRow, isLast && styles.menuRowLast]}
               >
                 <Icon size={20} color="#6B7280" style={styles.menuIcon} />
@@ -138,68 +135,28 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
         </View>
       </ScrollView>
 
-      {/* ── Bottom nav ── */}
-      <PatientHomeBottomNav
-        activeTab="Profile"
-        onHome={onHome}
-        onDoctors={onFindDoctor}
-        onAppointments={onAppointments}
-        onMessages={onMessages}
-      />
-    </SafeAreaView>
+        <PatientHomeBottomNav
+          activeTab="Profile"
+          onHome={onHome}
+          onDoctors={onFindDoctor}
+          onAppointments={onAppointments}
+          onMessages={onMessages}
+        />
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F1F5F9',
-  },
-  pageHeader: {
-    alignItems: 'center',
-    paddingVertical: 14,
-  },
-  pageTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2563EB',
-  },
-  scroll: {
-    paddingHorizontal: 20,
-    paddingBottom: 120,
-  },
-
-  /* ── Card ── */
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    paddingTop: 28,
-    paddingBottom: 8,
-    paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.07,
-    shadowRadius: 14,
-    elevation: 5,
-  },
-
-  /* favourite */
-  heartBtn: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    padding: 4,
-  },
-
   /* avatar */
   avatarWrap: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     backgroundColor: '#EFF6FF',
     overflow: 'hidden',
     alignSelf: 'center',
-    marginBottom: 12,
+    marginBottom: 9,
   },
   avatar: {
     width: '100%',
@@ -208,14 +165,14 @@ const styles = StyleSheet.create({
 
   /* user info */
   name: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     color: '#111827',
     textAlign: 'center',
     marginBottom: 4,
   },
   phone: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#6B7280',
     textAlign: 'center',
     marginBottom: 6,
@@ -234,35 +191,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#2563EB',
   },
   email: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#6B7280',
   },
 
   /* divider */
   divider: {
-    height: 1,
-    backgroundColor: '#F1F5F9',
-    marginHorizontal: -20,
-    marginBottom: 4,
+    height: 0,
   },
 
   /* menu */
   menuRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    paddingVertical: 12,
   },
   menuRowLast: {
-    borderBottomWidth: 0,
   },
   menuIcon: {
     marginRight: 14,
   },
   menuLabel: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
     color: '#374151',
   },

@@ -56,8 +56,6 @@ export const PatientHomeBottomNav = ({
         shadowOpacity: 0.1,
         shadowRadius: 12,
         elevation: 5,
-        borderWidth: 1,
-        borderColor: 'rgba(226, 232, 240, 0.8)',
       }}
     >
       <BottomTabItem
