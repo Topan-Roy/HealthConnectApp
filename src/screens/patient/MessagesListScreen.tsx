@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Search, MessageSquare } from 'lucide-react-native';
 import { Doctor } from '../../data/doctors';
+import { PatientHomeBottomNav } from '../../components/patient-home/PatientHomeBottomNav';
 
 export interface Conversation {
   doctor: Doctor;
@@ -24,6 +25,10 @@ interface MessagesListScreenProps {
   conversations?: Conversation[];
   onBack?: () => void;
   onOpenChat?: (doctor: Doctor) => void;
+  onHome?: () => void;
+  onDoctors?: () => void;
+  onAppointments?: () => void;
+  onProfile?: () => void;
 }
 
 const DEMO_CONVERSATIONS: Conversation[] = [
@@ -113,6 +118,10 @@ export const MessagesListScreen: React.FC<MessagesListScreenProps> = ({
   conversations = DEMO_CONVERSATIONS,
   onBack,
   onOpenChat,
+  onHome,
+  onDoctors,
+  onAppointments,
+  onProfile,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -253,6 +262,14 @@ export const MessagesListScreen: React.FC<MessagesListScreenProps> = ({
             contentContainerStyle={{ paddingBottom: 30 }}
           />
         )}
+        <PatientHomeBottomNav
+          activeTab="Messages"
+          onHome={onHome}
+          onDoctors={onDoctors}
+          onAppointments={onAppointments}
+          onMessages={() => {}}
+          onProfile={onProfile}
+        />
       </SafeAreaView>
     </ImageBackground>
   );

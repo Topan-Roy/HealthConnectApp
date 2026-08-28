@@ -265,6 +265,8 @@ export default function App() {
           }}
           onHome={() => setScreen('patient-home')}
           onAppointments={() => navigateTo('my-appointments')}
+          onMessages={() => navigateTo('messages-list')}
+          onProfile={() => navigateTo('patient-profile')}
         />
       )}
 
@@ -333,6 +335,8 @@ export default function App() {
           onViewCompleted={() => setScreen('appointment-completed')}
           onHome={() => setScreen('patient-home')}
           onDoctors={() => navigateTo('find-doctor')}
+          onMessages={() => navigateTo('messages-list')}
+          onProfile={() => navigateTo('patient-profile')}
         />
       )}
 
@@ -356,6 +360,10 @@ export default function App() {
       {screen === 'messages-list' && (
         <MessagesListScreen
           onBack={() => setScreen('patient-home')}
+          onHome={() => setScreen('patient-home')}
+          onDoctors={() => navigateTo('find-doctor')}
+          onAppointments={() => navigateTo('my-appointments')}
+          onProfile={() => navigateTo('patient-profile')}
           onOpenChat={(doctor) => {
             setChatDoctor(doctor);
             navigateTo('chat');

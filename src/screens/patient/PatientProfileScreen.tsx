@@ -30,6 +30,7 @@ interface PatientProfileScreenProps {
   onFindDoctor?: () => void;
   onAppointments?: () => void;
   onMessages?: () => void;
+  onProfile?: () => void;
   onLogout?: () => void;
 }
 
@@ -49,6 +50,7 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
   onFindDoctor,
   onAppointments,
   onMessages,
+  onProfile,
   onLogout,
 }) => {
   const handleLogout = () => {
@@ -141,6 +143,7 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
           onDoctors={onFindDoctor}
           onAppointments={onAppointments}
           onMessages={onMessages}
+          onProfile={onProfile}
         />
       </SafeAreaView>
     </ImageBackground>

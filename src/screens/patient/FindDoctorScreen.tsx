@@ -27,13 +27,17 @@ interface FindDoctorScreenProps {
   onDoctorPress?: (doctor: Doctor) => void;
   onHome?: () => void;
   onAppointments?: () => void;
+  onMessages?: () => void;
+  onProfile?: () => void;
 }
 
 export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({ 
   onBack, 
   onDoctorPress,
   onHome,
-  onAppointments
+  onAppointments,
+  onMessages,
+  onProfile,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
@@ -162,6 +166,8 @@ export const FindDoctorScreen: React.FC<FindDoctorScreenProps> = ({
         onHome={onHome}
         onDoctors={() => {}}
         onAppointments={onAppointments}
+        onMessages={onMessages}
+        onProfile={onProfile}
       />
     </SafeAreaView>
     </ImageBackground>

@@ -11,6 +11,8 @@ interface MyAppointmentsScreenProps {
   onViewCompleted?: () => void;
   onHome?: () => void;
   onDoctors?: () => void;
+  onMessages?: () => void;
+  onProfile?: () => void;
 }
 
 type TabType = 'Upcoming' | 'Completed' | 'Cancelled';
@@ -47,7 +49,9 @@ export const MyAppointmentsScreen: React.FC<MyAppointmentsScreenProps> = ({
   onJoinAppointment,
   onViewCompleted,
   onHome,
-  onDoctors
+  onDoctors,
+  onMessages,
+  onProfile,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('Upcoming');
 
@@ -169,6 +173,8 @@ export const MyAppointmentsScreen: React.FC<MyAppointmentsScreenProps> = ({
           onHome={onHome}
           onDoctors={onDoctors}
           onAppointments={() => {}}
+          onMessages={onMessages}
+          onProfile={onProfile}
         />
       </SafeAreaView>
     </ImageBackground>
