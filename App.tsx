@@ -35,6 +35,8 @@ import { PaymentMethodsScreen } from './src/screens/patient/PaymentMethodsScreen
 import { SettingsScreen } from './src/screens/patient/SettingsScreen';
 import { HelpSupportScreen } from './src/screens/patient/HelpSupportScreen';
 import { PrivacySecurityScreen } from './src/screens/patient/PrivacySecurityScreen';
+import { FaqScreen } from './src/screens/patient/FaqScreen';
+import { ContactSupportScreen } from './src/screens/patient/ContactSupportScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -68,6 +70,8 @@ type ScreenState =
   | 'help-support'
   | 'change-password'
   | 'privacy-security'
+  | 'faqs'
+  | 'contact-support'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -149,6 +153,8 @@ export default function App() {
         case 'help-support':
         case 'change-password':
         case 'privacy-security':
+        case 'faqs':
+        case 'contact-support':
           setScreen('patient-profile');
           return true;
         case 'chat':
@@ -437,7 +443,7 @@ export default function App() {
         />
       )}
 
-      {screen === 'help-support' && <HelpSupportScreen onBack={() => setScreen('patient-profile')} />}
+      {screen === 'help-support' && <HelpSupportScreen onBack={() => setScreen('patient-profile')} onFaq={() => navigateTo('faqs')} onContactSupport={() => navigateTo('contact-support')} />}
 
       {screen === 'change-password' && (
         <ResetPasswordScreen onBack={() => setScreen('settings')} onResetSuccess={() => setScreen('settings')} />
@@ -446,6 +452,10 @@ export default function App() {
       {screen === 'privacy-security' && (
         <PrivacySecurityScreen onBack={() => setScreen('settings')} />
       )}
+
+      {screen === 'faqs' && <FaqScreen onBack={() => setScreen('help-support')} />}
+
+      {screen === 'contact-support' && <ContactSupportScreen onBack={() => setScreen('help-support')} />}
 
       {/* Forgot Password Flow */}
       {screen === 'forgot-password' && (
