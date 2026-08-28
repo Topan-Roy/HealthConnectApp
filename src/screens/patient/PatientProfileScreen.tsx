@@ -28,6 +28,8 @@ interface PatientProfileScreenProps {
   onHealthInfo?: () => void;
   onEmergencyContact?: () => void;
   onPaymentMethods?: () => void;
+  onSettings?: () => void;
+  onHelpSupport?: () => void;
   onHome?: () => void;
   onFindDoctor?: () => void;
   onAppointments?: () => void;
@@ -50,6 +52,8 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
   onHealthInfo,
   onEmergencyContact,
   onPaymentMethods,
+  onSettings,
+  onHelpSupport,
   onHome,
   onFindDoctor,
   onAppointments,
@@ -110,7 +114,7 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
           {/* ── Menu rows ── */}
           {MENU_ITEMS.map(({ id, Icon, label }, index) => {
             const isLast = index === MENU_ITEMS.length - 1;
-            const onPress = id === 'personal' ? onPersonalInfo : id === 'health' ? onHealthInfo : id === 'emergency' ? onEmergencyContact : id === 'payment' ? onPaymentMethods : undefined;
+            const onPress = id === 'personal' ? onPersonalInfo : id === 'health' ? onHealthInfo : id === 'emergency' ? onEmergencyContact : id === 'payment' ? onPaymentMethods : id === 'settings' ? onSettings : id === 'help' ? onHelpSupport : undefined;
             return (
               <TouchableOpacity
                 key={id}

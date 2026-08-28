@@ -32,6 +32,8 @@ import { PersonalInfoScreen } from './src/screens/patient/PersonalInfoScreen';
 import { HealthInfoScreen } from './src/screens/patient/HealthInfoScreen';
 import { EmergencyContactScreen } from './src/screens/patient/EmergencyContactScreen';
 import { PaymentMethodsScreen } from './src/screens/patient/PaymentMethodsScreen';
+import { SettingsScreen } from './src/screens/patient/SettingsScreen';
+import { HelpSupportScreen } from './src/screens/patient/HelpSupportScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -61,6 +63,8 @@ type ScreenState =
   | 'health-info'
   | 'emergency-contact'
   | 'payment-methods'
+  | 'settings'
+  | 'help-support'
   | 'forgot-password'
   | 'forgot-password-otp'
   | 'reset-password';
@@ -138,6 +142,8 @@ export default function App() {
         case 'health-info':
         case 'emergency-contact':
         case 'payment-methods':
+        case 'settings':
+        case 'help-support':
           setScreen('patient-profile');
           return true;
         case 'chat':
@@ -392,6 +398,8 @@ export default function App() {
           onHealthInfo={() => navigateTo('health-info')}
           onEmergencyContact={() => navigateTo('emergency-contact')}
           onPaymentMethods={() => navigateTo('payment-methods')}
+          onSettings={() => navigateTo('settings')}
+          onHelpSupport={() => navigateTo('help-support')}
           onHome={() => setScreen('patient-home')}
           onFindDoctor={() => navigateTo('find-doctor')}
           onAppointments={() => navigateTo('my-appointments')}
@@ -415,6 +423,10 @@ export default function App() {
       {screen === 'payment-methods' && (
         <PaymentMethodsScreen onBack={() => setScreen('patient-profile')} />
       )}
+
+      {screen === 'settings' && <SettingsScreen onBack={() => setScreen('patient-profile')} />}
+
+      {screen === 'help-support' && <HelpSupportScreen onBack={() => setScreen('patient-profile')} />}
 
       {/* Forgot Password Flow */}
       {screen === 'forgot-password' && (
