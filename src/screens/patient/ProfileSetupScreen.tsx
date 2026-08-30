@@ -10,6 +10,7 @@ import {
   BackHandler,
   KeyboardAvoidingView,
   Platform,
+  Image,
   ImageBackground,
 } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
@@ -369,6 +370,24 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {/* Header */}
         <View className="border-b border-gray-100 px-6 pb-4 pt-5">
+          <View className="items-center">
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 24,
+                backgroundColor: '#EFF6FF',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}
+            >
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={{ width: 50, height: 50, resizeMode: 'contain' }}
+              />
+            </View>
+          </View>
           <StepIndicator current={step} total={TOTAL_STEPS} />
           <Text className="mt-3 text-center text-[22px] font-bold text-gray-900">
             {stepTitles[step - 1]}
