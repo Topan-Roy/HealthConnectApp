@@ -39,6 +39,14 @@ import { HelpSupportScreen } from './src/screens/patient/HelpSupportScreen';
 import { PrivacySecurityScreen } from './src/screens/patient/PrivacySecurityScreen';
 import { FaqScreen } from './src/screens/patient/FaqScreen';
 import { ContactSupportScreen } from './src/screens/patient/ContactSupportScreen';
+import { DoctorLoginScreen } from './src/screens/doctor/DoctorLoginScreen';
+import { DoctorSignupScreen } from './src/screens/doctor/DoctorSignupScreen';
+import { DoctorHomeScreen } from './src/screens/doctor/DoctorHomeScreen';
+import { DoctorOTPVerificationScreen } from './src/screens/doctor/DoctorOTPVerificationScreen';
+import { DoctorProfessionalInfoScreen } from './src/screens/doctor/DoctorProfessionalInfoScreen';
+import { DoctorMedicalLicenseScreen } from './src/screens/doctor/DoctorMedicalLicenseScreen';
+import { DoctorVerificationDocumentsScreen } from './src/screens/doctor/DoctorVerificationDocumentsScreen';
+import { DoctorVerificationPendingScreen } from './src/screens/doctor/DoctorVerificationPendingScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -46,6 +54,14 @@ type ScreenState =
   | 'onboarding'
   | 'welcome'
   | 'role-selection'
+  | 'doctor-login'
+  | 'doctor-signup'
+  | 'doctor-home'
+  | 'doctor-otp'
+  | 'doctor-professional-info'
+  | 'doctor-medical-license'
+  | 'doctor-verification-documents'
+  | 'doctor-pending'
   | 'patient-login'
   | 'patient-signup'
   | 'otp-verification'
@@ -107,6 +123,30 @@ export default function App() {
           return true;
         case 'role-selection':
           setScreen('welcome');
+          return true;
+        case 'doctor-login':
+          setScreen('role-selection');
+          return true;
+        case 'doctor-home':
+          setScreen('doctor-login');
+          return true;
+        case 'doctor-signup':
+          setScreen('doctor-login');
+          return true;
+        case 'doctor-otp':
+          setScreen('doctor-signup');
+          return true;
+        case 'doctor-professional-info':
+          setScreen('doctor-otp');
+          return true;
+        case 'doctor-medical-license':
+          setScreen('doctor-professional-info');
+          return true;
+        case 'doctor-verification-documents':
+          setScreen('doctor-medical-license');
+          return true;
+        case 'doctor-pending':
+          setScreen('doctor-verification-documents');
           return true;
         case 'patient-login':
           setScreen('role-selection');
@@ -196,6 +236,8 @@ export default function App() {
     setUserRole(role);
     if (role === 'patient') {
       navigateTo('patient-login');
+    } else if (role === 'doctor') {
+      navigateTo('doctor-login');
     }
   };
 
@@ -233,7 +275,66 @@ export default function App() {
         />
       )}
 
-      {/* 5. Patient Login Screen */}
+      {/* 5. Doctor Login Screen */}
+      {screen === 'doctor-login' && (
+        <DoctorLoginScreen
+          onBack={() => setScreen('role-selection')}
+          onLoginSuccess={() => setScreen('doctor-home')}
+          onGoToSignup={() => setScreen('doctor-signup')}
+        />
+      )}
+
+      {screen === 'doctor-signup' && (
+        <DoctorSignupScreen
+          onBack={() => setScreen('doctor-login')}
+          onSignupSuccess={() => setScreen('doctor-otp')}
+          onGoToLogin={() => setScreen('doctor-login')}
+        />
+      )}
+
+      {screen === 'doctor-home' && (
+        <DoctorHomeScreen
+          onBack={() => setScreen('doctor-login')}
+          onLogout={() => setScreen('doctor-login')}
+        />
+      )}
+
+      {screen === 'doctor-otp' && (
+        <DoctorOTPVerificationScreen
+          onBack={() => setScreen('doctor-signup')}
+          onVerifySuccess={() => setScreen('doctor-professional-info')}
+        />
+      )}
+
+      {screen === 'doctor-professional-info' && (
+        <DoctorProfessionalInfoScreen
+          onBack={() => setScreen('doctor-otp')}
+          onContinue={() => setScreen('doctor-medical-license')}
+        />
+      )}
+
+      {screen === 'doctor-medical-license' && (
+        <DoctorMedicalLicenseScreen
+          onBack={() => setScreen('doctor-professional-info')}
+          onContinue={() => setScreen('doctor-verification-documents')}
+        />
+      )}
+
+      {screen === 'doctor-verification-documents' && (
+        <DoctorVerificationDocumentsScreen
+          onBack={() => setScreen('doctor-medical-license')}
+          onContinue={() => setScreen('doctor-pending')}
+        />
+      )}
+
+      {screen === 'doctor-pending' && (
+        <DoctorVerificationPendingScreen
+          onBackToHome={() => setScreen('welcome')}
+          onGoToLogin={() => setScreen('doctor-login')}
+        />
+      )}
+
+      {/* 6. Patient Login Screen */}
       {screen === 'patient-login' && (
         <PatientLoginScreen
           onBack={() => setScreen('role-selection')}
@@ -243,7 +344,7 @@ export default function App() {
         />
       )}
 
-      {/* 6. Patient Signup Screen */}
+      {/* 7. Patient Signup Screen */}
       {screen === 'patient-signup' && (
         <PatientSignupScreen
           onBack={() => setScreen('patient-login')}
