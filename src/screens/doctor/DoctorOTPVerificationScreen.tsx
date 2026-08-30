@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Image,
   ImageBackground,
 } from 'react-native';
 
@@ -37,12 +38,31 @@ export const DoctorOTPVerificationScreen: React.FC<DoctorOTPVerificationScreenPr
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
 
         <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}>
-          <Text style={{ fontSize: 30, fontWeight: '800', color: '#111827', marginBottom: 10 }}>
-            Verify Your Phone
-          </Text>
-          <Text style={{ fontSize: 15, color: '#48494dff', marginBottom: 30 }}>
-            We sent a 6-digit code to +880 1712-345678
-          </Text>
+          <View style={{ alignItems: 'center', marginBottom: 18 }}>
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 24,
+                backgroundColor: '#EFF6FF',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={{ width: 50, height: 50, resizeMode: 'contain' }}
+              />
+            </View>
+
+            <Text style={{ fontSize: 30, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
+              Verify Your Phone
+            </Text>
+            <Text style={{ fontSize: 15, color: '#48494dff', marginTop: 6, textAlign: 'center' }}>
+              We sent a 6-digit code to +880 1712-345678
+            </Text>
+          </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 }}>
             {otp.map((digit, index) => (

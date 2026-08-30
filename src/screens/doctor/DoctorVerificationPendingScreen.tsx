@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Image,
   ImageBackground,
 } from 'react-native';
 
@@ -29,6 +30,22 @@ export const DoctorVerificationPendingScreen: React.FC<DoctorVerificationPending
 
         <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 40, paddingBottom: 40 }}>
           <View style={{ alignItems: 'center', marginBottom: 28 }}>
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 24,
+                backgroundColor: '#EFF6FF',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={{ width: 50, height: 50, resizeMode: 'contain' }}
+              />
+            </View>
             <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
               Application Submitted!
             </Text>

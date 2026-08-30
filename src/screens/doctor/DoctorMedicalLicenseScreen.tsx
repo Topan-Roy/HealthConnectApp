@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
+  Image,
   ImageBackground,
 } from 'react-native';
 
@@ -32,12 +33,30 @@ export const DoctorMedicalLicenseScreen: React.FC<DoctorMedicalLicenseScreenProp
       <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}>
-          <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', marginBottom: 12 }}>
-            Medical License
-          </Text>
-          <Text style={{ fontSize: 15, color: '#48494dff', marginBottom: 24 }}>
-            Add your medical license details
-          </Text>
+          <View style={{ alignItems: 'center', marginBottom: 18 }}>
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 24,
+                backgroundColor: '#EFF6FF',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={{ width: 50, height: 50, resizeMode: 'contain' }}
+              />
+            </View>
+            <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
+              Medical License
+            </Text>
+            <Text style={{ fontSize: 15, color: '#48494dff', marginTop: 6, textAlign: 'center' }}>
+              Add your medical license details
+            </Text>
+          </View>
 
           <View style={{ gap: 18 }}>
             <View>

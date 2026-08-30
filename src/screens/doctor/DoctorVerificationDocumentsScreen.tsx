@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
+  Image,
   ImageBackground,
 } from 'react-native';
 
@@ -28,12 +29,31 @@ export const DoctorVerificationDocumentsScreen: React.FC<DoctorVerificationDocum
       <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}>
-          <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', marginBottom: 12 }}>
-            Verification Documents
-          </Text>
-          <Text style={{ fontSize: 15, color: '#48494dff', marginBottom: 24 }}>
-            Please upload the following documents
-          </Text>
+          <View style={{ alignItems: 'center', marginBottom: 18 }}>
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 24,
+                backgroundColor: '#EFF6FF',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12,
+              }}
+            >
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={{ width: 50, height: 50, resizeMode: 'contain' }}
+              />
+            </View>
+
+            <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
+              Verification Documents
+            </Text>
+            <Text style={{ fontSize: 15, color: '#48494dff', marginTop: 6, textAlign: 'center' }}>
+              Please upload the following documents
+            </Text>
+          </View>
 
           <View style={{ gap: 16 }}>
             {[
