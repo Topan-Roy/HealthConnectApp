@@ -13,11 +13,13 @@ interface PatientHomeScreenProps {
   onBack?: () => void;
   onFindDoctor?: () => void;
   onAppointments?: () => void;
+  onMedicines?: () => void;
+  onReports?: () => void;
   onMessages?: () => void;
   onProfile?: () => void;
 }
 
-export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, onFindDoctor, onAppointments, onMessages, onProfile }) => {
+export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, onFindDoctor, onAppointments, onMedicines, onReports, onMessages, onProfile }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
@@ -31,7 +33,7 @@ export const PatientHomeScreen: React.FC<PatientHomeScreenProps> = ({ onBack, on
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
           <PatientHomeHeader onBack={onBack} />
           <PatientHomeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <PatientHomeQuickActions onFindDoctor={onFindDoctor} onAppointments={onAppointments} />
+          <PatientHomeQuickActions onFindDoctor={onFindDoctor} onAppointments={onAppointments} onMedicines={onMedicines} onReports={onReports} />
           <PatientHomeUpcoming />
           <PatientHomeSpecialties searchQuery={searchQuery} />
         </ScrollView>

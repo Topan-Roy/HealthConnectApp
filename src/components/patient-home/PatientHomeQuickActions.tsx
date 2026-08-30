@@ -13,17 +13,21 @@ const ActionItem = ({ icon, label, onPress }: { icon: React.ReactNode, label: st
 
 export const PatientHomeQuickActions = ({ 
   onFindDoctor,
-  onAppointments
+  onAppointments,
+  onMedicines,
+  onReports
 }: { 
   onFindDoctor?: () => void;
   onAppointments?: () => void;
+  onMedicines?: () => void;
+  onReports?: () => void;
 }) => {
   return (
     <View className="flex-row justify-between mb-8">
       <ActionItem icon={<UserSearch size={24} color="#2563EB" />} label="Find Doctor" onPress={onFindDoctor} />
       <ActionItem icon={<CalendarDays size={24} color="#2563EB" />} label="Appointments" onPress={onAppointments} />
-      <ActionItem icon={<Pill size={24} color="#2563EB" />} label="Medicines" />
-      <ActionItem icon={<FileText size={24} color="#2563EB" />} label="Reports" />
+      <ActionItem icon={<Pill size={24} color="#2563EB" />} label="Medicines" onPress={onMedicines} />
+      <ActionItem icon={<FileText size={24} color="#2563EB" />} label="Reports" onPress={onReports} />
     </View>
   );
 };
