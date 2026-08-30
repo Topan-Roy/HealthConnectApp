@@ -31,6 +31,7 @@ import { PatientProfileScreen } from './src/screens/patient/PatientProfileScreen
 import { PersonalInfoScreen } from './src/screens/patient/PersonalInfoScreen';
 import { HealthInfoScreen } from './src/screens/patient/HealthInfoScreen';
 import { MedicinesScreen } from './src/screens/patient/MedicinesScreen';
+import { ReportsScreen } from './src/screens/patient/ReportsScreen';
 import { EmergencyContactScreen } from './src/screens/patient/EmergencyContactScreen';
 import { PaymentMethodsScreen } from './src/screens/patient/PaymentMethodsScreen';
 import { SettingsScreen } from './src/screens/patient/SettingsScreen';
@@ -66,6 +67,7 @@ type ScreenState =
   | 'personal-info'
   | 'health-info'
   | 'medicines'
+  | 'reports'
   | 'emergency-contact'
   | 'payment-methods'
   | 'settings'
@@ -148,6 +150,7 @@ export default function App() {
           setScreen('patient-home');
           return true;
         case 'medicines':
+        case 'reports':
           setScreen('patient-home');
           return true;
         case 'personal-info':
@@ -279,7 +282,7 @@ export default function App() {
           onFindDoctor={() => navigateTo('find-doctor')}
           onAppointments={() => navigateTo('my-appointments')}
           onMedicines={() => navigateTo('medicines')}
-          onReports={() => setScreen('patient-home')}
+          onReports={() => navigateTo('reports')}
           onMessages={() => navigateTo('messages-list')}
           onProfile={() => navigateTo('patient-profile')}
         />
@@ -287,6 +290,10 @@ export default function App() {
 
       {screen === 'medicines' && (
         <MedicinesScreen onBack={() => setScreen('patient-home')} />
+      )}
+
+      {screen === 'reports' && (
+        <ReportsScreen onBack={() => setScreen('patient-home')} />
       )}
 
       {/* 11. Find Doctor Screen */}
