@@ -50,7 +50,7 @@ export const DoctorSignupScreen: React.FC<DoctorSignupScreenProps> = ({
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
           >
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <View style={{ alignItems: 'center', marginBottom: 18 }}>
               <View
                 style={{
                   width: 72,
@@ -59,7 +59,7 @@ export const DoctorSignupScreen: React.FC<DoctorSignupScreenProps> = ({
                   backgroundColor: '#EFF6FF',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginBottom: 16,
+                  marginBottom: 12,
                 }}
               >
                 <Image

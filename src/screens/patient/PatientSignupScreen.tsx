@@ -67,21 +67,21 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
           >
             {/* Top Header Logo Badge */}
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <View style={{ alignItems: 'center', marginBottom: 20 }}>
               <View
                 style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 20,
+                  width: 72,
+                  height: 72,
+                  borderRadius: 24,
                   backgroundColor: '#EFF6FF',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginBottom: 14,
+                  marginBottom: 12,
                 }}
               >
                 <Image
                   source={require('../../../assets/logo.png')}
-                  style={{ width: 44, height: 44, resizeMode: 'contain' }}
+                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
                 />
               </View>
 

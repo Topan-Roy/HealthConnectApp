@@ -296,7 +296,7 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
             </View>
 
             {/* Footer Link to Signup */}
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 8 }}>
               <Text style={{ fontSize: 14, color: '#48494dff' }}>Don't have an account? </Text>
               <TouchableOpacity onPress={onGoToSignup} activeOpacity={0.7}>
                 <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Sign Up</Text>
