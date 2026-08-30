@@ -19,6 +19,7 @@ interface DoctorLoginScreenProps {
   onBack: () => void;
   onLoginSuccess: () => void;
   onGoToSignup: () => void;
+  onForgotPassword?: () => void;
 }
 
 const GoogleIcon: React.FC = () => (
@@ -46,183 +47,122 @@ export const DoctorLoginScreen: React.FC<DoctorLoginScreenProps> = ({
   onBack,
   onLoginSuccess,
   onGoToSignup,
+  onForgotPassword,
 }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('sarah.ahmed@gmail.com');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1">
       <ImageBackground
         source={require('../../../assets/role_bg.jpg')}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        className="absolute inset-0"
         resizeMode="cover"
       />
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+      <SafeAreaView className="flex-1 bg-transparent">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <KeyboardAvoidingView
-          style={{ flex: 1 }}
+          className="flex-1"
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
+            contentContainerClassName="px-6 pt-7 pb-10"
           >
-            <View style={{ alignItems: 'center', marginBottom: 28 }}>
-              <View
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: 24,
-                  backgroundColor: '#EFF6FF',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 16,
-                }}
-              >
+            <View className="items-center mb-7">
+              <View className="mb-4 h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-blue-50">
                 <Image
                   source={require('../../../assets/logo.png')}
-                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                  className="h-[50px] w-[50px]"
+                  resizeMode="contain"
                 />
               </View>
 
-              <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827', textAlign: 'center' }}>
+              <Text className="text-center text-[28px] font-extrabold text-gray-900">
                 Welcome Back!
               </Text>
-              <Text style={{ fontSize: 14, color: '#48494dff', marginTop: 6, textAlign: 'center' }}>
+              <Text className="mt-1.5 text-center text-[14px] text-gray-600">
                 Login to your account
               </Text>
             </View>
 
-            <View style={{ gap: 20 }}>
+            <View className="gap-5">
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
-                  Email / Phone
-                </Text>
-                <View
-                  style={{
-                    backgroundColor: '#F8FAFC',
-                    borderRadius: 16,
-                    borderWidth: 1.5,
-                    borderColor: '#E2E8F0',
-                    paddingHorizontal: 16,
-                    height: 56,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Mail size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Email / Phone</Text>
+                <View className="h-[56px] flex-row items-center rounded-2xl border border-slate-200 bg-slate-50 px-4">
+                  <Mail size={20} color="#9CA3AF" className="mr-3" />
                   <TextInput
                     placeholder="sarah.ahmed@gmail.com"
                     placeholderTextColor="#9CA3AF"
                     value={emailOrPhone}
                     onChangeText={setEmailOrPhone}
-                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                    className="flex-1 text-[15px] text-gray-900"
                   />
                 </View>
               </View>
 
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>
-                  Password
-                </Text>
-                <View
-                  style={{
-                    backgroundColor: '#F8FAFC',
-                    borderRadius: 16,
-                    borderWidth: 1.5,
-                    borderColor: '#E2E8F0',
-                    paddingHorizontal: 16,
-                    height: 56,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Lock size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Password</Text>
+                <View className="h-[56px] flex-row items-center rounded-2xl border border-slate-200 bg-slate-50 px-4">
+                  <Lock size={20} color="#9CA3AF" className="mr-3" />
                   <TextInput
                     placeholder="Enter your password"
                     placeholderTextColor="#9CA3AF"
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
-                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                    className="flex-1 text-[15px] text-gray-900"
                   />
-                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-1">
                     {showPassword ? <EyeOff size={20} color="#48494dff" /> : <Eye size={20} color="#48494dff" />}
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
 
-            <View style={{ alignItems: 'flex-end', marginTop: 12, marginBottom: 28 }}>
-              <Text style={{ fontSize: 14, fontWeight: '700', color: '#2563EB' }}>Forgot Password?</Text>
+            <View className="mb-7 mt-3 items-end">
+              <TouchableOpacity activeOpacity={0.8} onPress={onForgotPassword}>
+                <Text className="text-[14px] font-bold text-primary">Forgot Password?</Text>
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity
               onPress={onLoginSuccess}
               activeOpacity={0.85}
-              style={{
-                backgroundColor: '#2563EB',
-                height: 56,
-                borderRadius: 18,
-                justifyContent: 'center',
-                alignItems: 'center',
-                shadowColor: '#2563EB',
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.25,
-                shadowRadius: 16,
-                elevation: 4,
-              }}
+              className="h-[56px] items-center justify-center rounded-[18px] bg-primary shadow-lg shadow-blue-600/30"
             >
-              <Text style={{ fontSize: 16, fontWeight: '800', color: '#FFFFFF' }}>Login</Text>
+              <Text className="text-[16px] font-extrabold text-white">Login</Text>
             </TouchableOpacity>
 
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18 }}>
-                <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
-                <Text style={{ fontSize: 13, fontWeight: '500', color: '#9CA3AF', marginHorizontal: 14 }}>
-                  or continue with
-                </Text>
-                <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
+            <View className="mb-6 mt-6 items-center">
+              <View className="mb-4 flex-row items-center">
+                <View className="h-px flex-1 bg-slate-200" />
+                <Text className="mx-3 text-[13px] font-medium text-slate-400">or continue with</Text>
+                <View className="h-px flex-1 bg-slate-200" />
               </View>
 
               <TouchableOpacity
                 activeOpacity={0.75}
-                style={{
-                  width: '100%',
-                  height: 54,
-                  borderRadius: 16,
-                  backgroundColor: '#FFFFFF',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 1,
-                  borderColor: '#E2E8F0',
-                  gap: 8,
-                  shadowColor: '#000000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.03,
-                  shadowRadius: 4,
-                  elevation: 1,
-                }}
+                className="h-[54px] w-full flex-row items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white shadow-sm"
               >
                 <GoogleIcon />
-                <Text style={{ fontSize: 15, fontWeight: '600', color: '#1E293B' }}>Google</Text>
+                <Text className="text-[15px] font-semibold text-slate-700">Google</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{ alignItems: 'center', marginTop: 6 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 13, color: '#475569' }}>Don’t have an account? </Text>
+            <View className="mt-2 items-center">
+              <View className="flex-row items-center justify-center">
+                <Text className="text-[13px] text-slate-600">Don’t have an account? </Text>
                 <TouchableOpacity onPress={onGoToSignup} activeOpacity={0.8}>
-                  <Text style={{ color: '#2563EB', fontWeight: '700' }}>Create Account</Text>
+                  <Text className="font-bold text-primary">Create Account</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
-            <TouchableOpacity onPress={onBack} style={{ alignItems: 'center', marginTop: 18 }}>
-              <Text style={{ fontSize: 14, color: '#2563EB', fontWeight: '700' }}>Back</Text>
+            <TouchableOpacity onPress={onBack} className="mt-5 items-center">
+              <Text className="text-[14px] font-bold text-primary">Back</Text>
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>

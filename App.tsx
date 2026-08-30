@@ -99,6 +99,7 @@ type ScreenState =
 export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
   const [userRole, setUserRole] = useState<'patient' | 'doctor' | null>(null);
+  const [authFlowOrigin, setAuthFlowOrigin] = useState<'patient' | 'doctor'>('patient');
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [bookingDate, setBookingDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
@@ -281,6 +282,10 @@ export default function App() {
           onBack={() => setScreen('role-selection')}
           onLoginSuccess={() => setScreen('doctor-home')}
           onGoToSignup={() => setScreen('doctor-signup')}
+          onForgotPassword={() => {
+            setAuthFlowOrigin('doctor');
+            setScreen('forgot-password');
+          }}
         />
       )}
 
@@ -340,7 +345,10 @@ export default function App() {
           onBack={() => setScreen('role-selection')}
           onLoginSuccess={() => setScreen('patient-home')}
           onGoToSignup={() => setScreen('patient-signup')}
-          onForgotPassword={() => setScreen('forgot-password')}
+          onForgotPassword={() => {
+            setAuthFlowOrigin('patient');
+            setScreen('forgot-password');
+          }}
         />
       )}
 
@@ -579,7 +587,7 @@ export default function App() {
       {/* Forgot Password Flow */}
       {screen === 'forgot-password' && (
         <ForgotPasswordScreen
-          onBack={() => setScreen('patient-login')}
+          onBack={() => setScreen(authFlowOrigin === 'doctor' ? 'doctor-login' : 'patient-login')}
           onSendOTP={() => setScreen('forgot-password-otp')}
         />
       )}
@@ -594,7 +602,7 @@ export default function App() {
       {screen === 'reset-password' && (
         <ResetPasswordScreen
           onBack={() => setScreen('forgot-password')}
-          onResetSuccess={() => setScreen('patient-login')}
+          onResetSuccess={() => setScreen(authFlowOrigin === 'doctor' ? 'doctor-login' : 'patient-login')}
         />
       )}
     </SafeAreaProvider>

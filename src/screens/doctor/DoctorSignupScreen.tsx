@@ -33,134 +33,105 @@ export const DoctorSignupScreen: React.FC<DoctorSignupScreenProps> = ({
   const [acceptTerms, setAcceptTerms] = useState(true);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1">
       <ImageBackground
         source={require('../../../assets/role_bg.jpg')}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        className="absolute inset-0"
         resizeMode="cover"
       />
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+      <SafeAreaView className="flex-1 bg-transparent">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <KeyboardAvoidingView
-          style={{ flex: 1 }}
+          className="flex-1"
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 28, paddingBottom: 40 }}
+            contentContainerClassName="px-6 pt-7 pb-10"
           >
-            <View style={{ alignItems: 'center', marginBottom: 18 }}>
-              <View
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: 24,
-                  backgroundColor: '#EFF6FF',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 12,
-                }}
-              >
+            <View className="mb-4 items-center">
+              <View className="mb-3 h-[72px] w-[72px] items-center justify-center rounded-[24px] bg-blue-50">
                 <Image
                   source={require('../../../assets/logo.png')}
-                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                  className="h-[50px] w-[50px]"
+                  resizeMode="contain"
                 />
               </View>
-              <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827' }}>
-                Create Doctor Account
-              </Text>
-              <Text style={{ fontSize: 14, color: '#48494dff', marginTop: 6 }}>
-                Let’s get started
-              </Text>
+              <Text className="text-[28px] font-extrabold text-gray-900">Create Doctor Account</Text>
+              <Text className="mt-1.5 text-[14px] text-gray-600">Let’s get started</Text>
             </View>
 
-            <View style={{ gap: 18 }}>
+            <View className="gap-4">
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>Full Name</Text>
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Full Name</Text>
                 <TextInput
                   value={fullName}
                   onChangeText={setFullName}
                   placeholder="Dr. Sarah Ahmed"
                   placeholderTextColor="#9CA3AF"
-                  style={{
-                    backgroundColor: '#F8FAFC',
-                    borderRadius: 16,
-                    borderWidth: 1.5,
-                    borderColor: '#E2E8F0',
-                    paddingHorizontal: 16,
-                    height: 56,
-                    fontSize: 15,
-                    color: '#111827',
-                  }}
+                  className="h-[56px] rounded-2xl border border-slate-200 bg-slate-50 px-4 text-[15px] text-gray-900"
                 />
               </View>
 
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>Email</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC', borderRadius: 16, borderWidth: 1.5, borderColor: '#E2E8F0', paddingHorizontal: 16, height: 56 }}>
-                  <Mail size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Email</Text>
+                <View className="h-[56px] flex-row items-center rounded-2xl border border-slate-200 bg-slate-50 px-4">
+                  <Mail size={20} color="#9CA3AF" className="mr-3" />
                   <TextInput
                     value={email}
                     onChangeText={setEmail}
                     placeholder="sarah.ahmed@gmail.com"
                     placeholderTextColor="#9CA3AF"
-                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                    className="flex-1 text-[15px] text-gray-900"
                   />
                 </View>
               </View>
 
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>Phone Number</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC', borderRadius: 16, borderWidth: 1.5, borderColor: '#E2E8F0', paddingHorizontal: 16, height: 56 }}>
-                  <Phone size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Phone Number</Text>
+                <View className="h-[56px] flex-row items-center rounded-2xl border border-slate-200 bg-slate-50 px-4">
+                  <Phone size={20} color="#9CA3AF" className="mr-3" />
                   <TextInput
                     value={phone}
                     onChangeText={setPhone}
                     placeholder="+880 1712-345678"
                     placeholderTextColor="#9CA3AF"
-                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                    className="flex-1 text-[15px] text-gray-900"
                   />
                 </View>
               </View>
 
               <View>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#1E293B', marginBottom: 8 }}>Password</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC', borderRadius: 16, borderWidth: 1.5, borderColor: '#E2E8F0', paddingHorizontal: 16, height: 56 }}>
-                  <Lock size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+                <Text className="mb-2 text-[14px] font-semibold text-slate-700">Password</Text>
+                <View className="h-[56px] flex-row items-center rounded-2xl border border-slate-200 bg-slate-50 px-4">
+                  <Lock size={20} color="#9CA3AF" className="mr-3" />
                   <TextInput
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Enter password"
                     placeholderTextColor="#9CA3AF"
                     secureTextEntry={!showPassword}
-                    style={{ flex: 1, fontSize: 15, color: '#111827' }}
+                    className="flex-1 text-[15px] text-gray-900"
                   />
-                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-1">
                     {showPassword ? <EyeOff size={20} color="#48494dff" /> : <Eye size={20} color="#48494dff" />}
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 18, marginBottom: 18 }}>
+            <View className="mt-5 flex-row items-center">
               <TouchableOpacity
                 onPress={() => setAcceptTerms(!acceptTerms)}
                 activeOpacity={0.8}
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 6,
-                  backgroundColor: acceptTerms ? '#2563EB' : '#FFFFFF',
-                  borderWidth: 1.5,
-                  borderColor: acceptTerms ? '#2563EB' : '#CBD5E1',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                className={`h-[22px] w-[22px] items-center justify-center rounded-md border ${
+                  acceptTerms ? 'border-primary bg-primary' : 'border-slate-300 bg-white'
+                }`}
               >
                 {acceptTerms && <Check size={14} color="#FFFFFF" />}
               </TouchableOpacity>
-              <Text style={{ marginLeft: 12, fontSize: 13, color: '#475569', flex: 1 }}>
+              <Text className="ml-3 flex-1 text-[13px] text-slate-600">
                 I agree to the Terms & Conditions and Privacy Policy
               </Text>
             </View>
@@ -168,26 +139,15 @@ export const DoctorSignupScreen: React.FC<DoctorSignupScreenProps> = ({
             <TouchableOpacity
               onPress={onSignupSuccess}
               activeOpacity={0.85}
-              style={{
-                backgroundColor: '#2563EB',
-                height: 56,
-                borderRadius: 18,
-                justifyContent: 'center',
-                alignItems: 'center',
-                shadowColor: '#2563EB',
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.25,
-                shadowRadius: 16,
-                elevation: 4,
-              }}
+              className="mt-6 h-[56px] items-center justify-center rounded-[18px] bg-primary shadow-lg shadow-blue-600/30"
             >
-              <Text style={{ fontSize: 16, fontWeight: '800', color: '#FFFFFF' }}>Continue</Text>
+              <Text className="text-[16px] font-extrabold text-white">Continue</Text>
             </TouchableOpacity>
 
-            <View style={{ alignItems: 'center', marginTop: 18 }}>
-              <Text style={{ fontSize: 13, color: '#475569' }}>
+            <View className="mt-5 items-center">
+              <Text className="text-[13px] text-slate-600">
                 Already have an account?{' '}
-                <Text onPress={onGoToLogin} style={{ color: '#2563EB', fontWeight: '700' }}>Login</Text>
+                <Text onPress={onGoToLogin} className="font-bold text-primary">Login</Text>
               </Text>
             </View>
           </ScrollView>
