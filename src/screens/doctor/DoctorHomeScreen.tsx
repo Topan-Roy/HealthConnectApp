@@ -10,9 +10,10 @@ import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBott
 interface DoctorHomeScreenProps {
   onBack?: () => void;
   onLogout?: () => void;
+  onAppointments?: () => void;
 }
 
-export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLogout }) => {
+export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLogout, onAppointments }) => {
   const [activeTab, setActiveTab] = useState('Home');
 
   return (
@@ -31,7 +32,10 @@ export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLo
         <DoctorHomeBottomNav
           activeTab={activeTab}
           onHome={() => setActiveTab('Home')}
-          onAppointments={() => setActiveTab('Appointments')}
+          onAppointments={() => {
+            setActiveTab('Appointments');
+            if (onAppointments) onAppointments();
+          }}
           onPatients={() => setActiveTab('Patients')}
           onMessages={() => setActiveTab('Messages')}
           onProfile={() => setActiveTab('Profile')}

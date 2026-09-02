@@ -47,6 +47,8 @@ import { DoctorProfessionalInfoScreen } from './src/screens/doctor/DoctorProfess
 import { DoctorMedicalLicenseScreen } from './src/screens/doctor/DoctorMedicalLicenseScreen';
 import { DoctorVerificationDocumentsScreen } from './src/screens/doctor/DoctorVerificationDocumentsScreen';
 import { DoctorVerificationPendingScreen } from './src/screens/doctor/DoctorVerificationPendingScreen';
+import { DoctorAppointmentsScreen } from './src/screens/doctor/DoctorAppointmentsScreen';
+import { DoctorAppointmentRequestScreen } from './src/screens/doctor/DoctorAppointmentRequestScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -62,6 +64,8 @@ type ScreenState =
   | 'doctor-medical-license'
   | 'doctor-verification-documents'
   | 'doctor-pending'
+  | 'doctor-appointments'
+  | 'doctor-appointment-request'
   | 'patient-login'
   | 'patient-signup'
   | 'otp-verification'
@@ -148,6 +152,12 @@ export default function App() {
           return true;
         case 'doctor-pending':
           setScreen('doctor-verification-documents');
+          return true;
+        case 'doctor-appointments':
+          setScreen('doctor-home');
+          return true;
+        case 'doctor-appointment-request':
+          setScreen('doctor-appointments');
           return true;
         case 'patient-login':
           setScreen('role-selection');
@@ -301,6 +311,22 @@ export default function App() {
         <DoctorHomeScreen
           onBack={() => setScreen('doctor-login')}
           onLogout={() => setScreen('doctor-login')}
+          onAppointments={() => navigateTo('doctor-appointments')}
+        />
+      )}
+
+      {screen === 'doctor-appointments' && (
+        <DoctorAppointmentsScreen
+          onBack={() => setScreen('doctor-home')}
+          onAppointmentPress={() => navigateTo('doctor-appointment-request')}
+        />
+      )}
+
+      {screen === 'doctor-appointment-request' && (
+        <DoctorAppointmentRequestScreen
+          onBack={() => setScreen('doctor-appointments')}
+          onAccept={() => setScreen('doctor-appointments')}
+          onReject={() => setScreen('doctor-appointments')}
         />
       )}
 
