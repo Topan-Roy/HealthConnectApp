@@ -52,6 +52,8 @@ import { DoctorAppointmentRequestScreen } from './src/screens/doctor/DoctorAppoi
 import { DoctorAppointmentDetailsScreen } from './src/screens/doctor/DoctorAppointmentDetailsScreen';
 import { DoctorRescheduleScreen } from './src/screens/doctor/DoctorRescheduleScreen';
 import { DoctorCancelAppointmentScreen } from './src/screens/doctor/DoctorCancelAppointmentScreen';
+import { DoctorConsultationNotesScreen } from './src/screens/doctor/DoctorConsultationNotesScreen';
+import { DoctorVideoCallScreen } from './src/screens/doctor/DoctorVideoCallScreen';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -72,6 +74,8 @@ type ScreenState =
   | 'doctor-appointment-details'
   | 'doctor-reschedule'
   | 'doctor-cancel-appointment'
+  | 'doctor-consultation-notes'
+  | 'doctor-video-call'
   | 'patient-login'
   | 'patient-signup'
   | 'otp-verification'
@@ -169,6 +173,12 @@ export default function App() {
         case 'doctor-reschedule':
         case 'doctor-cancel-appointment':
           setScreen('doctor-appointment-details');
+          return true;
+        case 'doctor-consultation-notes':
+          setScreen('doctor-appointment-details');
+          return true;
+        case 'doctor-video-call':
+          setScreen('doctor-consultation-notes');
           return true;
         case 'patient-login':
           setScreen('role-selection');
@@ -344,7 +354,7 @@ export default function App() {
       {screen === 'doctor-appointment-details' && (
         <DoctorAppointmentDetailsScreen
           onBack={() => setScreen('doctor-appointments')}
-          onStartConsultation={() => {}} // Should probably navigate to a chat/video screen later
+          onStartConsultation={() => setScreen('doctor-consultation-notes')}
           onReschedule={() => navigateTo('doctor-reschedule')}
           onCancel={() => navigateTo('doctor-cancel-appointment')}
         />
@@ -361,6 +371,19 @@ export default function App() {
         <DoctorCancelAppointmentScreen
           onBack={() => setScreen('doctor-appointment-details')}
           onConfirmCancel={() => setScreen('doctor-appointments')}
+        />
+      )}
+
+      {screen === 'doctor-consultation-notes' && (
+        <DoctorConsultationNotesScreen
+          onBack={() => setScreen('doctor-appointment-details')}
+          onSaveAndContinue={() => setScreen('doctor-video-call')}
+        />
+      )}
+
+      {screen === 'doctor-video-call' && (
+        <DoctorVideoCallScreen
+          onEndCall={() => setScreen('doctor-appointments')}
         />
       )}
 

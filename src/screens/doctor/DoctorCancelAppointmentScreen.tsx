@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, ImageBackground, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, ImageBackground, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { ArrowLeft, ChevronDown } from 'lucide-react-native';
 
 interface DoctorCancelAppointmentScreenProps {
@@ -23,9 +23,17 @@ export const DoctorCancelAppointmentScreen: React.FC<DoctorCancelAppointmentScre
       className="flex-1"
       resizeMode="cover"
     >
-      <SafeAreaView className="flex-1">
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 100 }}>
-          
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <SafeAreaView className="flex-1">
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 140 }}
+          >
           <View className="flex-row items-center justify-center mb-8 relative">
             <TouchableOpacity 
               onPress={onBack} 
@@ -94,7 +102,8 @@ export const DoctorCancelAppointmentScreen: React.FC<DoctorCancelAppointmentScre
           </TouchableOpacity>
 
         </ScrollView>
-      </SafeAreaView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
