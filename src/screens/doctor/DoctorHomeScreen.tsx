@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, ScrollView, ImageBackground } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { DoctorHomeHeader } from '../../components/doctor-home/DoctorHomeHeader';
+import { DoctorHomeStats } from '../../components/doctor-home/DoctorHomeStats';
+import { DoctorHomeSchedule } from '../../components/doctor-home/DoctorHomeSchedule';
+import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBottomNav';
 
 interface DoctorHomeScreenProps {
   onBack?: () => void;
@@ -7,61 +13,31 @@ interface DoctorHomeScreenProps {
 }
 
 export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLogout }) => {
+  const [activeTab, setActiveTab] = useState('Home');
+
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground
-        source={require('../../../assets/role_bg.jpg')}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-        resizeMode="cover"
-      />
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-
-        <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 36, paddingBottom: 30 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-            <Text style={{ fontSize: 28, fontWeight: '800', color: '#111827' }}>Doctor Home</Text>
-            <TouchableOpacity onPress={onBack}>
-              <Text style={{ color: '#2563EB', fontWeight: '700' }}>Back</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 24, padding: 20, marginBottom: 18 }}>
-            <Text style={{ fontSize: 14, color: '#475569' }}>Welcome</Text>
-            <Text style={{ fontSize: 26, fontWeight: '800', color: '#111827', marginTop: 6 }}>Dr. Sarah Ahmed</Text>
-            <Text style={{ fontSize: 14, color: '#2563EB', marginTop: 8 }}>Cardiology Specialist</Text>
-          </View>
-
-          <View style={{ backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 24, padding: 20, marginBottom: 18 }}>
-            <Text style={{ fontSize: 18, fontWeight: '700', color: '#111827' }}>Today Summary</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}>
-              <View style={{ flex: 1, marginRight: 10 }}>
-                <Text style={{ fontSize: 12, color: '#475569' }}>Appointments</Text>
-                <Text style={{ fontSize: 26, fontWeight: '800', color: '#111827' }}>24</Text>
-              </View>
-              <View style={{ flex: 1, marginLeft: 10 }}>
-                <Text style={{ fontSize: 12, color: '#475569' }}>Patients</Text>
-                <Text style={{ fontSize: 26, fontWeight: '800', color: '#111827' }}>128</Text>
-              </View>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            onPress={onLogout}
-            activeOpacity={0.85}
-            style={{
-              backgroundColor: '#2563EB',
-              height: 56,
-              borderRadius: 18,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 8,
-            }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: '800', color: '#FFFFFF' }}>Logout</Text>
-          </TouchableOpacity>
-        </View>
+    <ImageBackground
+      source={require('../../../assets/role_bg.jpg')}
+      className="flex-1"
+      resizeMode="cover"
+    >
+      <SafeAreaView className="flex-1">
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 20 }}>
+          <DoctorHomeHeader />
+          <DoctorHomeStats />
+          <DoctorHomeSchedule />
+        </ScrollView>
+        
+        <DoctorHomeBottomNav
+          activeTab={activeTab}
+          onHome={() => setActiveTab('Home')}
+          onAppointments={() => setActiveTab('Appointments')}
+          onPatients={() => setActiveTab('Patients')}
+          onMessages={() => setActiveTab('Messages')}
+          onProfile={() => setActiveTab('Profile')}
+        />
       </SafeAreaView>
-    </View>
+    </ImageBackground>
   );
 };
 
