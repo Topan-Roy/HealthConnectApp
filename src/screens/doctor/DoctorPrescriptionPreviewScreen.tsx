@@ -63,12 +63,12 @@ export const DoctorPrescriptionPreviewScreen: React.FC<DoctorPrescriptionPreview
             {/* Medicines List */}
             <View className="mb-5 border-b border-gray-100 pb-5">
               <Text className="text-gray-900 font-bold text-base mb-3">Medicines</Text>
-              
+
               <View className="mb-3">
                 <Text className="text-gray-900 font-semibold">• Paracetamol 500mg</Text>
                 <Text className="text-gray-500 text-sm ml-3 mt-1">1 - 1 - 1 × 5 Days</Text>
               </View>
-              
+
               <View>
                 <Text className="text-gray-900 font-semibold">• Vitamin C 500mg</Text>
                 <Text className="text-gray-500 text-sm ml-3 mt-1">1 - 0 - 1 × 5 Days</Text>
@@ -93,7 +93,7 @@ export const DoctorPrescriptionPreviewScreen: React.FC<DoctorPrescriptionPreview
               <Edit2 size={18} color="#2563EB" />
               <Text className="text-blue-600 font-bold text-base ml-2">Edit</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               onPress={onSendToPatient}
               className="flex-1 bg-green-600 py-4 rounded-2xl items-center justify-center shadow-sm"
@@ -101,6 +101,9 @@ export const DoctorPrescriptionPreviewScreen: React.FC<DoctorPrescriptionPreview
               <Text className="text-white font-bold text-base">Send to Patient</Text>
             </TouchableOpacity>
           </View>
+
+
+
 
         </ScrollView>
       </SafeAreaView>
