@@ -101,10 +101,6 @@ export const DoctorPrescriptionPreviewScreen: React.FC<DoctorPrescriptionPreview
               <Text className="text-white font-bold text-base">Send to Patient</Text>
             </TouchableOpacity>
           </View>
-
-
-
-
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
