@@ -8,6 +8,10 @@ interface DoctorPrescriptionPreviewScreenProps {
   onSendToPatient?: () => void; // Navigates to Video Call screen
 }
 
+
+
+
+
 export const DoctorPrescriptionPreviewScreen: React.FC<DoctorPrescriptionPreviewScreenProps> = ({
   onBack,
   onEdit,
