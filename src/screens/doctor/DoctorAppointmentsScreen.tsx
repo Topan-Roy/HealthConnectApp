@@ -5,11 +5,13 @@ import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBott
 interface DoctorAppointmentsScreenProps {
   onBack?: () => void;
   onAppointmentPress?: () => void;
+  onPatients?: () => void;
 }
 
 export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> = ({
   onBack,
-  onAppointmentPress
+  onAppointmentPress,
+  onPatients,
 }) => {
   const [activeTab, setActiveTab] = useState('Today');
   const [navTab, setNavTab] = useState('Appointments');
@@ -102,7 +104,10 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
             if (onBack) onBack(); // Navigate back to home
           }}
           onAppointments={() => setNavTab('Appointments')}
-          onPatients={() => setNavTab('Patients')}
+          onPatients={() => {
+            setNavTab('Patients');
+            if (onPatients) onPatients();
+          }}
           onMessages={() => setNavTab('Messages')}
           onProfile={() => setNavTab('Profile')}
         />

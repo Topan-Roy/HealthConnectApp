@@ -11,9 +11,19 @@ interface DoctorHomeScreenProps {
   onBack?: () => void;
   onLogout?: () => void;
   onAppointments?: () => void;
+  onPatients?: () => void;
+  onMessages?: () => void;
+  onProfile?: () => void;
 }
 
-export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLogout, onAppointments }) => {
+export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({
+  onBack,
+  onLogout,
+  onAppointments,
+  onPatients,
+  onMessages,
+  onProfile,
+}) => {
   const [activeTab, setActiveTab] = useState('Home');
 
   return (
@@ -36,9 +46,18 @@ export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({ onBack, onLo
             setActiveTab('Appointments');
             if (onAppointments) onAppointments();
           }}
-          onPatients={() => setActiveTab('Patients')}
-          onMessages={() => setActiveTab('Messages')}
-          onProfile={() => setActiveTab('Profile')}
+          onPatients={() => {
+            setActiveTab('Patients');
+            if (onPatients) onPatients();
+          }}
+          onMessages={() => {
+            setActiveTab('Messages');
+            if (onMessages) onMessages();
+          }}
+          onProfile={() => {
+            setActiveTab('Profile');
+            if (onProfile) onProfile();
+          }}
         />
       </SafeAreaView>
     </ImageBackground>

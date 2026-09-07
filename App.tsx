@@ -54,6 +54,10 @@ import { DoctorRescheduleScreen } from './src/screens/doctor/DoctorRescheduleScr
 import { DoctorCancelAppointmentScreen } from './src/screens/doctor/DoctorCancelAppointmentScreen';
 import { DoctorConsultationNotesScreen } from './src/screens/doctor/DoctorConsultationNotesScreen';
 import { DoctorVideoCallScreen } from './src/screens/doctor/DoctorVideoCallScreen';
+import { DoctorPatientsScreen } from './src/screens/doctor/DoctorPatientsScreen';
+import { DoctorPatientDetailsScreen } from './src/screens/doctor/DoctorPatientDetailsScreen';
+import { DoctorPatientHistoryScreen } from './src/screens/doctor/DoctorPatientHistoryScreen';
+import { Patient, PATIENTS_DATA } from './src/data/patients';
 import { Doctor } from './src/data/doctors';
 
 type ScreenState =
@@ -76,6 +80,9 @@ type ScreenState =
   | 'doctor-cancel-appointment'
   | 'doctor-consultation-notes'
   | 'doctor-video-call'
+  | 'doctor-patients'
+  | 'doctor-patient-details'
+  | 'doctor-patient-history'
   | 'patient-login'
   | 'patient-signup'
   | 'otp-verification'
@@ -118,6 +125,7 @@ export default function App() {
   const [bookingDate, setBookingDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
   const [chatDoctor, setChatDoctor] = useState<Doctor | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<Patient>(PATIENTS_DATA[0]);
   
   // To handle the back flow correctly when coming from different paths
   const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
@@ -178,7 +186,16 @@ export default function App() {
           setScreen('doctor-appointment-details');
           return true;
         case 'doctor-video-call':
-          setScreen('doctor-consultation-notes');
+          setScreen('doctor-appointments');
+          return true;
+        case 'doctor-patients':
+          setScreen('doctor-home');
+          return true;
+        case 'doctor-patient-details':
+          setScreen('doctor-patients');
+          return true;
+        case 'doctor-patient-history':
+          setScreen('doctor-patient-details');
           return true;
         case 'patient-login':
           setScreen('role-selection');
@@ -333,6 +350,7 @@ export default function App() {
           onBack={() => setScreen('doctor-login')}
           onLogout={() => setScreen('doctor-login')}
           onAppointments={() => navigateTo('doctor-appointments')}
+          onPatients={() => navigateTo('doctor-patients')}
         />
       )}
 
@@ -340,6 +358,7 @@ export default function App() {
         <DoctorAppointmentsScreen
           onBack={() => setScreen('doctor-home')}
           onAppointmentPress={() => navigateTo('doctor-appointment-request')}
+          onPatients={() => navigateTo('doctor-patients')}
         />
       )}
 
@@ -384,6 +403,36 @@ export default function App() {
       {screen === 'doctor-video-call' && (
         <DoctorVideoCallScreen
           onEndCall={() => setScreen('doctor-appointments')}
+        />
+      )}
+
+      {screen === 'doctor-patients' && (
+        <DoctorPatientsScreen
+          onBack={() => setScreen('doctor-home')}
+          onHome={() => setScreen('doctor-home')}
+          onAppointments={() => navigateTo('doctor-appointments')}
+          onSelectPatient={(patient) => {
+            setSelectedPatient(patient);
+            navigateTo('doctor-patient-details');
+          }}
+        />
+      )}
+
+      {screen === 'doctor-patient-details' && (
+        <DoctorPatientDetailsScreen
+          patient={selectedPatient}
+          onBack={() => setScreen('doctor-patients')}
+          onViewHistory={(patient) => {
+            setSelectedPatient(patient);
+            navigateTo('doctor-patient-history');
+          }}
+        />
+      )}
+
+      {screen === 'doctor-patient-history' && (
+        <DoctorPatientHistoryScreen
+          patient={selectedPatient}
+          onBack={() => setScreen('doctor-patient-details')}
         />
       )}
 
