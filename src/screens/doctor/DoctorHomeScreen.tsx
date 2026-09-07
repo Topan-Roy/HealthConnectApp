@@ -38,7 +38,7 @@ export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({
           <DoctorHomeStats />
           <DoctorHomeSchedule />
         </ScrollView>
-        
+
         <DoctorHomeBottomNav
           activeTab={activeTab}
           onHome={() => setActiveTab('Home')}

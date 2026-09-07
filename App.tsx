@@ -57,6 +57,8 @@ import { DoctorVideoCallScreen } from './src/screens/doctor/DoctorVideoCallScree
 import { DoctorPatientsScreen } from './src/screens/doctor/DoctorPatientsScreen';
 import { DoctorPatientDetailsScreen } from './src/screens/doctor/DoctorPatientDetailsScreen';
 import { DoctorPatientHistoryScreen } from './src/screens/doctor/DoctorPatientHistoryScreen';
+import { DoctorMessagesScreen } from './src/screens/doctor/DoctorMessagesScreen';
+import { DoctorChatScreen } from './src/screens/doctor/DoctorChatScreen';
 import { Patient, PATIENTS_DATA } from './src/data/patients';
 import { Doctor } from './src/data/doctors';
 
@@ -83,6 +85,8 @@ type ScreenState =
   | 'doctor-patients'
   | 'doctor-patient-details'
   | 'doctor-patient-history'
+  | 'doctor-messages'
+  | 'doctor-chat'
   | 'patient-login'
   | 'patient-signup'
   | 'otp-verification'
@@ -196,6 +200,12 @@ export default function App() {
           return true;
         case 'doctor-patient-history':
           setScreen('doctor-patient-details');
+          return true;
+        case 'doctor-messages':
+          setScreen('doctor-home');
+          return true;
+        case 'doctor-chat':
+          setScreen('doctor-messages');
           return true;
         case 'patient-login':
           setScreen('role-selection');
@@ -351,6 +361,7 @@ export default function App() {
           onLogout={() => setScreen('doctor-login')}
           onAppointments={() => navigateTo('doctor-appointments')}
           onPatients={() => navigateTo('doctor-patients')}
+          onMessages={() => navigateTo('doctor-messages')}
         />
       )}
 
@@ -359,6 +370,7 @@ export default function App() {
           onBack={() => setScreen('doctor-home')}
           onAppointmentPress={() => navigateTo('doctor-appointment-request')}
           onPatients={() => navigateTo('doctor-patients')}
+          onMessages={() => navigateTo('doctor-messages')}
         />
       )}
 
@@ -411,6 +423,7 @@ export default function App() {
           onBack={() => setScreen('doctor-home')}
           onHome={() => setScreen('doctor-home')}
           onAppointments={() => navigateTo('doctor-appointments')}
+          onMessages={() => navigateTo('doctor-messages')}
           onSelectPatient={(patient) => {
             setSelectedPatient(patient);
             navigateTo('doctor-patient-details');
@@ -433,6 +446,27 @@ export default function App() {
         <DoctorPatientHistoryScreen
           patient={selectedPatient}
           onBack={() => setScreen('doctor-patient-details')}
+        />
+      )}
+
+      {screen === 'doctor-messages' && (
+        <DoctorMessagesScreen
+          onBack={() => setScreen('doctor-home')}
+          onHome={() => setScreen('doctor-home')}
+          onAppointments={() => navigateTo('doctor-appointments')}
+          onPatients={() => navigateTo('doctor-patients')}
+          onOpenChat={(patient) => {
+            setSelectedPatient(patient);
+            navigateTo('doctor-chat');
+          }}
+        />
+      )}
+
+      {screen === 'doctor-chat' && (
+        <DoctorChatScreen
+          patient={selectedPatient}
+          onBack={() => setScreen('doctor-messages')}
+          onVideoCall={() => navigateTo('doctor-video-call')}
         />
       )}
 

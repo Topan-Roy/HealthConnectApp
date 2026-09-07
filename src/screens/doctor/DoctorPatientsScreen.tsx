@@ -79,6 +79,7 @@ export const DoctorPatientsScreen: React.FC<DoctorPatientsScreenProps> = ({
         {/* Patients List */}
         <ScrollView
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 110 }}
         >
           {filteredPatients.length > 0 ? (

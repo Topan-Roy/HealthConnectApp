@@ -6,12 +6,14 @@ interface DoctorAppointmentsScreenProps {
   onBack?: () => void;
   onAppointmentPress?: () => void;
   onPatients?: () => void;
+  onMessages?: () => void;
 }
 
 export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> = ({
   onBack,
   onAppointmentPress,
   onPatients,
+  onMessages,
 }) => {
   const [activeTab, setActiveTab] = useState('Today');
   const [navTab, setNavTab] = useState('Appointments');
@@ -108,7 +110,10 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
             setNavTab('Patients');
             if (onPatients) onPatients();
           }}
-          onMessages={() => setNavTab('Messages')}
+          onMessages={() => {
+            setNavTab('Messages');
+            if (onMessages) onMessages();
+          }}
           onProfile={() => setNavTab('Profile')}
         />
       </SafeAreaView>
