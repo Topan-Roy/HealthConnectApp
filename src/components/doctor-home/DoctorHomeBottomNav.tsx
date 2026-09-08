@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { Home, Calendar, Users, MessageSquare, User } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,9 +14,13 @@ const BottomTabItem = ({
   isActive?: boolean;
   onPress?: () => void;
 }) => (
-  <TouchableOpacity className="items-center gap-1" onPress={onPress}>
+  <TouchableOpacity
+    className="items-center justify-center flex-1 py-1"
+    activeOpacity={0.7}
+    onPress={onPress}
+  >
     {icon}
-    <Text className={`text-[10px] font-medium ${isActive ? 'text-blue-600' : 'text-gray-400'}`}>
+    <Text className={`text-[10px] font-medium mt-0.5 ${isActive ? 'text-blue-600 font-bold' : 'text-gray-400'}`}>
       {label}
     </Text>
   </TouchableOpacity>
@@ -40,22 +44,29 @@ export const DoctorHomeBottomNav = ({
   onProfile,
 }: DoctorHomeBottomNavProps) => {
   const insets = useSafeAreaInsets();
+  // Safe bottom offset that accounts for Android 3-button nav and iPhone home bar
+  const bottomOffset = insets.bottom > 0
+    ? insets.bottom + 8
+    : (Platform.OS === 'android' ? 24 : 16);
 
   return (
     <View
       className="absolute flex-row justify-around items-center"
       style={{
-        bottom: insets.bottom > 0 ? insets.bottom + 10 : 20,
-        left: '5%',
-        right: '5%',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        borderRadius: 100,
-        height: 65,
+        bottom: bottomOffset,
+        left: 16,
+        right: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.96)',
+        borderRadius: 36,
+        height: 64,
+        paddingHorizontal: 8,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 12,
-        elevation: 5,
+        shadowOpacity: 0.12,
+        shadowRadius: 14,
+        elevation: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(241, 245, 249, 0.9)',
       }}
     >
       <BottomTabItem

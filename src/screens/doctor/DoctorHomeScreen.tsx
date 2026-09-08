@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, ScrollView, ImageBackground } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, ImageBackground, Platform } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DoctorHomeHeader } from '../../components/doctor-home/DoctorHomeHeader';
 import { DoctorHomeStats } from '../../components/doctor-home/DoctorHomeStats';
@@ -25,6 +25,9 @@ export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({
   onProfile,
 }) => {
   const [activeTab, setActiveTab] = useState('Home');
+  const insets = useSafeAreaInsets();
+  // Ensure enough bottom scroll space so no content is covered by the bottom nav bar
+  const bottomScrollPadding = 80 + (insets.bottom > 0 ? insets.bottom + 20 : (Platform.OS === 'android' ? 36 : 24));
 
   return (
     <ImageBackground
@@ -32,8 +35,11 @@ export const DoctorHomeScreen: React.FC<DoctorHomeScreenProps> = ({
       className="flex-1"
       resizeMode="cover"
     >
-      <SafeAreaView className="flex-1">
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 20 }}>
+      <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: bottomScrollPadding, paddingHorizontal: 20 }}
+        >
           <DoctorHomeHeader />
           <DoctorHomeStats />
           <DoctorHomeSchedule />

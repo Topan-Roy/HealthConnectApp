@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ImageBackground, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground, Platform } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBottomNav';
 
 interface DoctorAppointmentsScreenProps {
@@ -7,6 +8,7 @@ interface DoctorAppointmentsScreenProps {
   onAppointmentPress?: () => void;
   onPatients?: () => void;
   onMessages?: () => void;
+  onProfile?: () => void;
 }
 
 export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> = ({
@@ -14,9 +16,12 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
   onAppointmentPress,
   onPatients,
   onMessages,
+  onProfile,
 }) => {
   const [activeTab, setActiveTab] = useState('Today');
   const [navTab, setNavTab] = useState('Appointments');
+  const insets = useSafeAreaInsets();
+  const bottomScrollPadding = 80 + (insets.bottom > 0 ? insets.bottom + 20 : (Platform.OS === 'android' ? 36 : 24));
 
   const tabs = ['Today', 'Upcoming', 'Completed', 'Cancelled'];
 
@@ -47,11 +52,9 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
       className="flex-1"
       resizeMode="cover"
     >
-      <SafeAreaView className="flex-1">
-
-
+      <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
         {/* Tabs */}
-        <View className="flex-row px-6 mt-12 mb-6">
+        <View className="flex-row px-6 mt-4 mb-4">
           {tabs.map((tab) => (
             <TouchableOpacity
               key={tab}
@@ -70,7 +73,10 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
         </View>
 
         {/* List */}
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 100 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: bottomScrollPadding }}
+        >
           {currentAppointments.length > 0 ? (
             currentAppointments.map((apt) => (
               <TouchableOpacity
@@ -114,7 +120,10 @@ export const DoctorAppointmentsScreen: React.FC<DoctorAppointmentsScreenProps> =
             setNavTab('Messages');
             if (onMessages) onMessages();
           }}
-          onProfile={() => setNavTab('Profile')}
+          onProfile={() => {
+            setNavTab('Profile');
+            if (onProfile) onProfile();
+          }}
         />
       </SafeAreaView>
     </ImageBackground>

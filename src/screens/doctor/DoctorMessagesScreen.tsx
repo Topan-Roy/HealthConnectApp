@@ -7,8 +7,9 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, X, MessageSquare, CheckCheck } from 'lucide-react-native';
 import { PATIENTS_DATA, Patient } from '../../data/patients';
 import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBottomNav';
@@ -77,6 +78,8 @@ export const DoctorMessagesScreen: React.FC<DoctorMessagesScreenProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const insets = useSafeAreaInsets();
+  const bottomScrollPadding = 80 + (insets.bottom > 0 ? insets.bottom + 20 : (Platform.OS === 'android' ? 36 : 24));
 
   const filteredConversations = useMemo(() => {
     return INITIAL_CONVERSATIONS.filter((conv) => {
@@ -100,7 +103,7 @@ export const DoctorMessagesScreen: React.FC<DoctorMessagesScreenProps> = ({
       className="flex-1"
       resizeMode="cover"
     >
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
         {/* Header */}
         <View className="px-6 pt-4 pb-2 flex-row justify-between items-center">
           <View>
@@ -172,7 +175,7 @@ export const DoctorMessagesScreen: React.FC<DoctorMessagesScreenProps> = ({
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 110 }}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: bottomScrollPadding }}
         >
           {filteredConversations.length > 0 ? (
             filteredConversations.map((conv) => {

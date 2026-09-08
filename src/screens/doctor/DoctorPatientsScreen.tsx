@@ -7,8 +7,9 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, X, ChevronRight, User } from 'lucide-react-native';
 import { PATIENTS_DATA, Patient } from '../../data/patients';
 import { DoctorHomeBottomNav } from '../../components/doctor-home/DoctorHomeBottomNav';
@@ -32,6 +33,8 @@ export const DoctorPatientsScreen: React.FC<DoctorPatientsScreenProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const insets = useSafeAreaInsets();
+  const bottomScrollPadding = 80 + (insets.bottom > 0 ? insets.bottom + 20 : (Platform.OS === 'android' ? 36 : 24));
 
   const filteredPatients = useMemo(() => {
     if (!searchQuery.trim()) return PATIENTS_DATA;
@@ -50,7 +53,7 @@ export const DoctorPatientsScreen: React.FC<DoctorPatientsScreenProps> = ({
       className="flex-1"
       resizeMode="cover"
     >
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className="flex-1" edges={['top', 'left', 'right']}>
         {/* Header */}
         <View className="px-6 pt-4 pb-2">
           <Text className="text-gray-900 text-2xl font-bold">My Patients</Text>
@@ -80,7 +83,7 @@ export const DoctorPatientsScreen: React.FC<DoctorPatientsScreenProps> = ({
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 110 }}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: bottomScrollPadding }}
         >
           {filteredPatients.length > 0 ? (
             filteredPatients.map((patient) => {
