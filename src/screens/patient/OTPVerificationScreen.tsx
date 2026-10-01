@@ -10,8 +10,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Svg, { Path, Circle, Rect } from 'react-native-svg';
+import { usePatientAuthStore } from '../../store/patientAuthStore';
 
 interface OTPVerificationScreenProps {
   onBack: () => void;
@@ -41,6 +44,23 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
   const [timer, setTimer] = useState(45);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(TextInput | null)[]>([]);
+
+  const { verifyOTP, isLoading, registrationData, error } = usePatientAuthStore();
+
+  const handleVerify = async () => {
+    const otpCode = otp.join('');
+    if (otpCode.length < 6) return;
+    
+    try {
+      await verifyOTP({
+        email: registrationData?.email || phoneNumber, // Fallback if phone is used instead of email
+        otp: otpCode
+      });
+      onVerifySuccess();
+    } catch (err) {
+      // Error handled in store
+    }
+  };
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -192,10 +212,17 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
               )}
             </View>
 
+            {/* Error Message */}
+            {error && (
+              <Text style={{ color: 'red', textAlign: 'center', marginBottom: 12 }}>
+                {error}
+              </Text>
+            )}
+
             {/* Verify Button */}
             <TouchableOpacity
-              onPress={onVerifySuccess}
-              disabled={!isComplete}
+              onPress={handleVerify}
+              disabled={!isComplete || isLoading}
               activeOpacity={0.85}
               style={{
                 backgroundColor: isComplete ? '#2563EB' : '#93C5FD',
@@ -209,9 +236,13 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
                 elevation: isComplete ? 8 : 0,
               }}
             >
-              <Text style={{ fontSize: 16, fontWeight: '700', color: '#FFFFFF', letterSpacing: 0.3 }}>
-                Verify
-              </Text>
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={{ fontSize: 16, fontWeight: '700', color: '#FFFFFF', letterSpacing: 0.3 }}>
+                  Verify
+                </Text>
+              )}
             </TouchableOpacity>
 
           </View>

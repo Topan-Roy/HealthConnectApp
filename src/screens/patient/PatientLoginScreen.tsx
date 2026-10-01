@@ -12,9 +12,12 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
+import { useAuthStore } from '../../store/authStore';
 
 interface PatientLoginScreenProps {
   onBack: () => void;
@@ -61,6 +64,22 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const { login, isLoading, error } = useAuthStore();
+
+  const handleLogin = async () => {
+    if (!emailOrPhone || !password) {
+      Alert.alert('Error', 'Please enter both email/phone and password');
+      return;
+    }
+    try {
+      // Assuming emailOrPhone is just used as email field per API payload
+      await login({ email: emailOrPhone, password });
+      onLoginSuccess();
+    } catch (err) {
+      // Error is already handled in store, can optionally show alert or we rely on the `error` state.
+    }
+  };
 
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -211,9 +230,17 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
               </TouchableOpacity>
             </View>
 
+            {/* Error Message */}
+            {error && (
+              <Text style={{ color: 'red', textAlign: 'center', marginBottom: 12 }}>
+                {error}
+              </Text>
+            )}
+
             {/* Login Primary Button */}
             <TouchableOpacity
-              onPress={onLoginSuccess}
+              onPress={handleLogin}
+              disabled={isLoading}
               activeOpacity={0.85}
               style={{
                 backgroundColor: '#2563EB',
@@ -229,7 +256,11 @@ export const PatientLoginScreen: React.FC<PatientLoginScreenProps> = ({
                 marginBottom: 32,
               }}
             >
-              <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Login</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Login</Text>
+              )}
             </TouchableOpacity>
 
             {/* Social Login Divider & Options */}

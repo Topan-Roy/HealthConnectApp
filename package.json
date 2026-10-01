@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^3.1.1",
     "@react-native-community/datetimepicker": "8.4.4",
     "expo": "~54.0.37",
     "expo-build-properties": "~1.0.10",
@@ -22,7 +23,8 @@
     "react-native-safe-area-context": "~5.6.0",
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
-    "react-native-worklets": "0.5.1"
+    "react-native-worklets": "0.5.1",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",

@@ -12,8 +12,11 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { User, Mail, Phone, Lock, Eye, EyeOff, Check } from 'lucide-react-native';
+import { usePatientAuthStore } from '../../store/patientAuthStore';
 
 interface PatientSignupScreenProps {
   onBack: () => void;
@@ -36,6 +39,34 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const { initiateRegistration, isLoading, error } = usePatientAuthStore();
+
+  const handleSignup = async () => {
+    if (!fullName || !email || !phone || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    if (!agreeTerms) {
+      Alert.alert('Error', 'You must agree to the Terms & Privacy Policy');
+      return;
+    }
+    try {
+      await initiateRegistration({
+        name: fullName,
+        email,
+        password,
+        phone,
+      });
+      onSignupSuccess();
+    } catch (err) {
+      // Error is handled in store
+    }
+  };
 
   useEffect(() => {
     const handleHardwareBack = () => {
@@ -280,9 +311,17 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
               </Text>
             </TouchableOpacity>
 
+            {/* Error Message */}
+            {error && (
+              <Text style={{ color: 'red', textAlign: 'center', marginBottom: 12 }}>
+                {error}
+              </Text>
+            )}
+
             {/* Create Account Button */}
             <TouchableOpacity
-              onPress={onSignupSuccess}
+              onPress={handleSignup}
+              disabled={isLoading}
               activeOpacity={0.85}
               style={{
                 backgroundColor: '#2563EB',
@@ -298,7 +337,11 @@ export const PatientSignupScreen: React.FC<PatientSignupScreenProps> = ({
                 marginBottom: 24,
               }}
             >
-              <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Create Account</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={{ fontSize: 17, fontWeight: '700', color: '#FFFFFF' }}>Create Account</Text>
+              )}
             </TouchableOpacity>
 
             {/* Footer: Login Link */}

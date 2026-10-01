@@ -8,6 +8,7 @@ import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { WelcomeAuthScreen } from './src/screens/WelcomeAuthScreen';
 import { RoleSelectionScreen } from './src/screens/RoleSelectionScreen';
+import { useAuthStore } from './src/store/authStore';
 import { PatientLoginScreen } from './src/screens/patient/PatientLoginScreen';
 import { PatientSignupScreen } from './src/screens/patient/PatientSignupScreen';
 import { OTPVerificationScreen } from './src/screens/patient/OTPVerificationScreen';
@@ -146,8 +147,26 @@ export default function App() {
   const [chatDoctor, setChatDoctor] = useState<Doctor | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient>(PATIENTS_DATA[0]);
   
+  const { user, isInitialized, initializeAuth } = useAuthStore();
+
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+  
   // To handle the back flow correctly when coming from different paths
   const [previousScreen, setPreviousScreen] = useState<ScreenState | null>(null);
+
+  const handleSplashFinish = () => {
+    if (user) {
+      if (user.role === 'doctor') {
+        setScreen('doctor-home');
+      } else {
+        setScreen('patient-home');
+      }
+    } else {
+      setScreen('onboarding');
+    }
+  };
 
   const navigateTo = (nextScreen: ScreenState) => {
     setPreviousScreen(screen);
@@ -334,7 +353,7 @@ export default function App() {
 
       {/* 1. Splash Screen */}
       {screen === 'splash' && (
-        <SplashScreen onFinish={() => setScreen('onboarding')} />
+        <SplashScreen onFinish={handleSplashFinish} />
       )}
 
       {/* 2. Onboarding Screens (01, 02, 03) */}
