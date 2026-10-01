@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView,
   ImageBackground, TextInput, Image,
+  Alert, ActivityIndicator, Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Camera } from 'lucide-react-native';
+import { ArrowLeft, Camera, CalendarDays } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Alert, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '../../store/authStore';
 import { usePatientAuthStore } from '../../store/patientAuthStore';
 
@@ -15,25 +15,25 @@ interface PersonalInfoScreenProps {
 }
 
 export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }) => {
-  const [name, setName] = useState('Topan Roy');
-  const [phone, setPhone] = useState('+880 1712-345678');
-  const [email, setEmail] = useState('topanroy@gmail.com');
-  const [dob, setDob] = useState('12 Jan 1995');
-  const [gender, setGender] = useState('Male');
-  const [address, setAddress] = useState('Dhaka, Bangladesh');
+  const { user, accessToken } = useAuthStore();
+  const { completeProfile, isLoading } = usePatientAuthStore();
+
+  const [name, setName] = useState(user?.name || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [dob, setDob] = useState('');
+  const [gender, setGender] = useState('');
+  const [address, setAddress] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date(1995, 0, 12));
+  const [birthDate, setBirthDate] = useState(new Date());
 
   const formatBirthDate = (date: Date) =>
     date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-  const { accessToken } = useAuthStore();
-  const { completeProfile, isLoading } = usePatientAuthStore();
-
   const handleSave = async () => {
     try {
       const formattedDate = birthDate.toISOString().split('T')[0];
-      
+
       await completeProfile({
         name,
         phone,
@@ -42,7 +42,7 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
         gender: gender.toLowerCase(),
         fullAddress: address
       }, accessToken || '');
-      
+
       Alert.alert('Success', 'Profile saved successfully!');
       if (onBack) onBack();
     } catch (err: any) {
@@ -101,24 +101,30 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
             </View>
             <View className="mb-3 rounded-2xl bg-white/45 px-4 py-3 shadow-sm">
               <Text className="mb-1 text-[11px] font-semibold uppercase text-gray-400">Date of Birth</Text>
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <TextInput
-                  value={dob}
-                  placeholder="DD MMM YYYY"
-                  placeholderTextColor="#9CA3AF"
-                  editable={false}
-                  pointerEvents="none"
-                  className="text-[15px] font-medium text-gray-900"
-                />
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                activeOpacity={0.7}
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <Text style={{
+                  fontSize: 15,
+                  fontWeight: '500',
+                  color: dob ? '#111827' : '#9CA3AF',
+                  flex: 1,
+                }}>
+                  {dob || 'Select date of birth'}
+                </Text>
+                <CalendarDays size={18} color="#2563EB" />
               </TouchableOpacity>
               {showDatePicker && (
                 <DateTimePicker
                   value={birthDate}
                   mode="date"
-                  display="calendar"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  maximumDate={new Date()}
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
-                    if (selectedDate) {
+                    if (event.type !== 'dismissed' && selectedDate) {
                       setBirthDate(selectedDate);
                       setDob(formatBirthDate(selectedDate));
                     }
@@ -136,7 +142,7 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
             </View>
           </View>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleSave}
             disabled={isLoading}
             className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30"

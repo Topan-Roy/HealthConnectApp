@@ -23,6 +23,8 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
 
   initiateRegistration: async (data) => {
     set({ isLoading: true, error: null });
+    console.log('\n🔵 [REGISTER] Request →', ENDPOINTS.PATIENT.INITIATE);
+    console.log('🔵 [REGISTER] Body →', JSON.stringify(data, null, 2));
     try {
       const response = await fetch(ENDPOINTS.PATIENT.INITIATE, {
         method: 'POST',
@@ -30,6 +32,8 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      console.log('🟢 [REGISTER] Status →', response.status);
+      console.log('🟢 [REGISTER] Response →', JSON.stringify(result, null, 2));
       
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Failed to initiate registration');
@@ -38,6 +42,7 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
       set({ isLoading: false, registrationData: { email: data.email } });
       return result;
     } catch (error: any) {
+      console.log('🔴 [REGISTER] Error →', error.message);
       set({ isLoading: false, error: error.message });
       throw error;
     }
@@ -45,6 +50,8 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
 
   verifyOTP: async (data) => {
     set({ isLoading: true, error: null });
+    console.log('\n🔵 [VERIFY OTP] Request →', ENDPOINTS.PATIENT.VERIFY_OTP);
+    console.log('🔵 [VERIFY OTP] Body →', JSON.stringify(data, null, 2));
     try {
       const response = await fetch(ENDPOINTS.PATIENT.VERIFY_OTP, {
         method: 'POST',
@@ -52,6 +59,8 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      console.log('🟢 [VERIFY OTP] Status →', response.status);
+      console.log('🟢 [VERIFY OTP] Response →', JSON.stringify(result, null, 2));
       
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'OTP verification failed');
@@ -60,6 +69,7 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
       set({ isLoading: false });
       return result;
     } catch (error: any) {
+      console.log('🔴 [VERIFY OTP] Error →', error.message);
       set({ isLoading: false, error: error.message });
       throw error;
     }
@@ -67,9 +77,10 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
 
   completeProfile: async (data, token) => {
     set({ isLoading: true, error: null });
+    console.log('\n🔵 [COMPLETE PROFILE] Request →', ENDPOINTS.PATIENT.COMPLETE_PROFILE);
+    console.log('🔵 [COMPLETE PROFILE] Body →', JSON.stringify(data, null, 2));
+    console.log('🔵 [COMPLETE PROFILE] Token →', token ? token.substring(0, 20) + '...' : 'NO TOKEN!');
     try {
-      // Assuming complete-profile needs an authorization token. 
-      // If not, you can remove the Authorization header.
       const response = await fetch(ENDPOINTS.PATIENT.COMPLETE_PROFILE, {
         method: 'POST',
         headers: { 
@@ -79,6 +90,8 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      console.log('🟢 [COMPLETE PROFILE] Status →', response.status);
+      console.log('🟢 [COMPLETE PROFILE] Response →', JSON.stringify(result, null, 2));
       
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Failed to complete profile');
@@ -87,6 +100,7 @@ export const usePatientAuthStore = create<PatientAuthStore>((set, get) => ({
       set({ isLoading: false });
       return result;
     } catch (error: any) {
+      console.log('🔴 [COMPLETE PROFILE] Error →', error.message);
       set({ isLoading: false, error: error.message });
       throw error;
     }

@@ -12,8 +12,13 @@ import {
   Platform,
   Image,
   ImageBackground,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useAuthStore } from '../../store/authStore';
+import { usePatientAuthStore } from '../../store/patientAuthStore';
 
 interface ProfileSetupScreenProps {
   onBack: () => void;
@@ -134,30 +139,82 @@ const GenderRadio: React.FC<{ value: string; onChange: (v: string) => void }> = 
 );
 
 // Step 1: Personal Info
-const Step1: React.FC<{ data: any; setData: (d: any) => void }> = ({ data, setData }) => (
-  <View>
-    <StyledInput
-      label="Full Name"
-      value={data.fullName}
-      onChangeText={v => setData({ ...data, fullName: v })}
-      placeholder="Enter your full name"
-    />
-    <StyledInput
-      label="Date of Birth"
-      value={data.dob}
-      onChangeText={v => setData({ ...data, dob: v })}
-      placeholder="Select your date of birth"
-    />
-    <GenderRadio value={data.gender} onChange={v => setData({ ...data, gender: v })} />
-    <StyledInput
-      label="Phone Number"
-      value={data.phone}
-      onChangeText={v => setData({ ...data, phone: v })}
-      placeholder="Enter your phone number"
-      keyboardType="phone-pad"
-    />
-  </View>
-);
+const Step1: React.FC<{ data: any; setData: (d: any) => void }> = ({ data, setData }) => {
+  const [showPicker, setShowPicker] = useState(false);
+  const [birthDate, setBirthDate] = useState(new Date());
+
+  const formatDate = (date: Date) =>
+    date.toISOString().split('T')[0]; // YYYY-MM-DD format for API
+
+  const formatDisplay = (date: Date) =>
+    date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  return (
+    <View>
+      {/* Full Name - pre-filled, editable */}
+      <StyledInput
+        label="Full Name"
+        value={data.fullName}
+        onChangeText={v => setData({ ...data, fullName: v })}
+        placeholder="Enter your full name"
+      />
+
+      {/* Date of Birth - calendar picker */}
+      <View className="mb-4">
+        <Text className="mb-1.5 text-[13px] font-semibold text-gray-700">Date of Birth</Text>
+        <TouchableOpacity
+          onPress={() => setShowPicker(true)}
+          activeOpacity={0.8}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderWidth: 1.5,
+            borderColor: data.dob ? '#2563EB' : '#E5E7EB',
+            borderRadius: 12,
+            paddingHorizontal: 14,
+            paddingVertical: 12,
+            backgroundColor: data.dob ? '#EFF6FF' : '#F9FAFB',
+          }}
+        >
+          <Text style={{ fontSize: 15, color: data.dob ? '#111827' : '#9CA3AF', flex: 1 }}>
+            {data.dob || 'Select your date of birth'}
+          </Text>
+          <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+            <Path d="M8 2v3M16 2v3M3 8h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="#2563EB" strokeWidth={1.8} strokeLinecap="round" />
+          </Svg>
+        </TouchableOpacity>
+        {showPicker && (
+          <DateTimePicker
+            value={birthDate}
+            mode="date"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            maximumDate={new Date()}
+            onChange={(event, selectedDate) => {
+              setShowPicker(false);
+              if (event.type !== 'dismissed' && selectedDate) {
+                setBirthDate(selectedDate);
+                // API তে YYYY-MM-DD format পাঠাবে
+                setData({ ...data, dob: formatDate(selectedDate), dobDisplay: formatDisplay(selectedDate) });
+              }
+            }}
+          />
+        )}
+      </View>
+
+      <GenderRadio value={data.gender} onChange={v => setData({ ...data, gender: v })} />
+
+      {/* Phone Number - pre-filled, editable */}
+      <StyledInput
+        label="Phone Number"
+        value={data.phone}
+        onChangeText={v => setData({ ...data, phone: v })}
+        placeholder="Enter your phone number"
+        keyboardType="phone-pad"
+      />
+    </View>
+  );
+};
 
 // Step 2: Profile Photo
 const Step2: React.FC = () => (
@@ -332,8 +389,11 @@ const stepTitles = [
 export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, onComplete }) => {
   const [step, setStep] = useState(1);
 
+  const { user, accessToken } = useAuthStore();
+  const { completeProfile, isLoading } = usePatientAuthStore();
+
   const [personalData, setPersonalData] = useState({
-    fullName: '', dob: '', gender: '', phone: '',
+    fullName: user?.name || '', dob: '', gender: '', phone: user?.phone || '',
   });
   const [healthData, setHealthData] = useState({
     bloodGroup: '', height: '', weight: '', allergies: '', conditions: '',
@@ -354,11 +414,34 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
     return () => subscription.remove();
   }, [step, onBack]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < TOTAL_STEPS) {
       setStep(s => s + 1);
     } else {
-      onComplete();
+      // Last step: call API
+      try {
+        const payload = {
+          dateOfBirth: personalData.dob,
+          gender: personalData.gender.toLowerCase(),
+          bloodGroup: healthData.bloodGroup,
+          height: healthData.height ? Number(healthData.height) : undefined,
+          weight: healthData.weight ? Number(healthData.weight) : undefined,
+          allergies: healthData.allergies || 'None',
+          existingConditions: healthData.conditions || 'None',
+          emergencyContactName: emergencyData.contactName,
+          emergencyContactRelationship: emergencyData.relationship,
+          emergencyContactPhone: emergencyData.contactPhone,
+          division: addressData.division,
+          district: addressData.district,
+          area: addressData.area,
+          fullAddress: addressData.address,
+        };
+
+        await completeProfile(payload, accessToken || '');
+        onComplete();
+      } catch (err: any) {
+        Alert.alert('Error', err.message || 'Failed to complete profile');
+      }
     }
   };
 
@@ -367,69 +450,74 @@ export const ProfileSetupScreen: React.FC<ProfileSetupScreenProps> = ({ onBack, 
       <SafeAreaView className="flex-1">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        {/* Header */}
-        <View className="border-b border-gray-100 px-6 pb-4 pt-5">
-          <View className="items-center">
-            <View
-              style={{
-                width: 72,
-                height: 72,
-                borderRadius: 24,
-                backgroundColor: '#EFF6FF',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 8,
-              }}
-            >
-              <Image
-                source={require('../../../assets/logo.png')}
-                style={{ width: 50, height: 50, resizeMode: 'contain' }}
-              />
-            </View>
-          </View>
-          <StepIndicator current={step} total={TOTAL_STEPS} />
-          <Text className="mt-3 text-center text-[22px] font-bold text-gray-900">
-            {stepTitles[step - 1]}
-          </Text>
-        </View>
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          contentContainerClassName="px-6 pb-10 pt-6"
-        >
-          {step === 1 && <Step1 data={personalData} setData={setPersonalData} />}
-          {step === 2 && <Step2 />}
-          {step === 3 && <Step3 data={healthData} setData={setHealthData} />}
-          {step === 4 && <Step4 data={emergencyData} setData={setEmergencyData} />}
-          {step === 5 && <Step5 data={addressData} setData={setAddressData} />}
-
-          {/* Next / Skip (Step 2) */}
-          <View className="mt-6">
-            <TouchableOpacity
-              onPress={handleNext}
-              activeOpacity={0.85}
-              className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30"
-            >
-              <Text className="text-base font-bold text-white">
-                {step === TOTAL_STEPS ? 'Next' : 'Next'}
-              </Text>
-            </TouchableOpacity>
-
-            {step === 2 && (
-              <TouchableOpacity
-                onPress={() => setStep(3)}
-                className="mt-4 items-center"
+        <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          {/* Header */}
+          <View className="border-b border-gray-100 px-6 pb-4 pt-5">
+            <View className="items-center">
+              <View
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: 24,
+                  backgroundColor: '#EFF6FF',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
               >
-                <Text className="text-sm font-medium text-gray-600">
-                  Skip for now
-                </Text>
-              </TouchableOpacity>
-            )}
+                <Image
+                  source={require('../../../assets/logo.png')}
+                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                />
+              </View>
+            </View>
+            <StepIndicator current={step} total={TOTAL_STEPS} />
+            <Text className="mt-3 text-center text-[22px] font-bold text-gray-900">
+              {stepTitles[step - 1]}
+            </Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerClassName="px-6 pb-10 pt-6"
+          >
+            {step === 1 && <Step1 data={personalData} setData={setPersonalData} />}
+            {step === 2 && <Step2 />}
+            {step === 3 && <Step3 data={healthData} setData={setHealthData} />}
+            {step === 4 && <Step4 data={emergencyData} setData={setEmergencyData} />}
+            {step === 5 && <Step5 data={addressData} setData={setAddressData} />}
+
+            {/* Next / Skip (Step 2) */}
+            <View className="mt-6">
+              <TouchableOpacity
+                onPress={handleNext}
+                disabled={isLoading}
+                activeOpacity={0.85}
+                className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30"
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#FFFFFF" size="small" />
+                ) : (
+                  <Text className="text-base font-bold text-white">
+                    {step === TOTAL_STEPS ? 'Complete Setup' : 'Next'}
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              {step === 2 && (
+                <TouchableOpacity
+                  onPress={() => setStep(3)}
+                  className="mt-4 items-center"
+                >
+                  <Text className="text-sm font-medium text-gray-600">
+                    Skip for now
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
   );

@@ -37,6 +37,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   login: async (data) => {
     set({ isLoading: true, error: null });
+    console.log('\n🔵 [LOGIN] Request →', ENDPOINTS.AUTH.LOGIN);
+    console.log('🔵 [LOGIN] Body →', JSON.stringify(data, null, 2));
     try {
       const response = await fetch(ENDPOINTS.AUTH.LOGIN, {
         method: 'POST',
@@ -44,6 +46,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      console.log('🟢 [LOGIN] Status →', response.status);
+      console.log('🟢 [LOGIN] Response →', JSON.stringify(result, null, 2));
       
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Login failed');
@@ -55,6 +59,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
       return result;
     } catch (error: any) {
+      console.log('🔴 [LOGIN] Error →', error.message);
       set({ isLoading: false, error: error.message });
       throw error;
     }
