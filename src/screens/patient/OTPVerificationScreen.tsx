@@ -40,21 +40,20 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
   onVerifySuccess,
   phoneNumber = '+880 1XXXXXXXXX',
 }) => {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(45);
   const [canResend, setCanResend] = useState(false);
-  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const inputRef = useRef<TextInput>(null);
 
   const { verifyOTP, isLoading, registrationData, error } = usePatientAuthStore();
 
   const handleVerify = async () => {
-    const otpCode = otp.join('');
-    if (otpCode.length < 6) return;
+    if (otp.length < 6) return;
     
     try {
       await verifyOTP({
-        email: registrationData?.email || phoneNumber, // Fallback if phone is used instead of email
-        otp: otpCode
+        email: registrationData?.email || phoneNumber,
+        otp: otp
       });
       onVerifySuccess();
     } catch (err) {
@@ -79,32 +78,16 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleOtpChange = (text: string, index: number) => {
-    const digit = text.replace(/[^0-9]/g, '').slice(-1);
-    const newOtp = [...otp];
-    newOtp[index] = digit;
-    setOtp(newOtp);
-    if (digit && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
   const handleResend = () => {
     setTimer(45);
     setCanResend(false);
-    setOtp(['', '', '', '', '', '']);
-    inputRefs.current[0]?.focus();
+    setOtp('');
+    inputRef.current?.focus();
   };
 
   const formatTimer = (s: number) => `00:${s.toString().padStart(2, '0')}`;
 
-  const isComplete = otp.every(d => d !== '');
+  const isComplete = otp.length === 6;
 
   return (
     <View style={{ flex: 1 }}>
@@ -163,35 +146,49 @@ export const OTPVerificationScreen: React.FC<OTPVerificationScreenProps> = ({
                 Enter the 6-digit code sent to
               </Text>
               <Text style={{ fontSize: 15, fontWeight: '600', color: '#2563EB', marginTop: 4 }}>
-                {phoneNumber}
+                {registrationData?.email || phoneNumber}
               </Text>
             </View>
 
+            {/* Hidden Input */}
+            <TextInput
+              ref={inputRef}
+              value={otp}
+              onChangeText={(text) => setOtp(text.replace(/[^0-9]/g, '').slice(0, 6))}
+              keyboardType="number-pad"
+              maxLength={6}
+              style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }}
+              autoFocus={true}
+            />
+
             {/* OTP Input Boxes */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 28 }}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={ref => { inputRefs.current[index] = ref; }}
-                  value={digit}
-                  onChangeText={text => handleOtpChange(text, index)}
-                  onKeyPress={e => handleKeyPress(e, index)}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  style={{
-                    width: 48,
-                    height: 56,
-                    borderWidth: 2,
-                    borderColor: digit ? '#2563EB' : '#E5E7EB',
-                    borderRadius: 12,
-                    fontSize: 22,
-                    fontWeight: '700',
-                    textAlign: 'center',
-                    color: '#111827',
-                    backgroundColor: digit ? '#EFF6FF' : '#F9FAFB',
-                  }}
-                />
-              ))}
+              {[0, 1, 2, 3, 4, 5].map((index) => {
+                const digit = otp[index] || '';
+                const isFocused = otp.length === index;
+                
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    activeOpacity={1}
+                    onPress={() => inputRef.current?.focus()}
+                    style={{
+                      width: 48,
+                      height: 56,
+                      borderWidth: 2,
+                      borderColor: isFocused ? '#2563EB' : digit ? '#2563EB' : '#E5E7EB',
+                      borderRadius: 12,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: digit ? '#EFF6FF' : '#F9FAFB',
+                    }}
+                  >
+                    <Text style={{ fontSize: 22, fontWeight: '700', color: '#111827' }}>
+                      {digit}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
             {/* Resend Timer */}

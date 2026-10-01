@@ -6,6 +6,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Camera } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Alert, ActivityIndicator } from 'react-native';
+import { useAuthStore } from '../../store/authStore';
+import { usePatientAuthStore } from '../../store/patientAuthStore';
 
 interface PersonalInfoScreenProps {
   onBack?: () => void;
@@ -23,6 +26,29 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
 
   const formatBirthDate = (date: Date) =>
     date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  const { accessToken } = useAuthStore();
+  const { completeProfile, isLoading } = usePatientAuthStore();
+
+  const handleSave = async () => {
+    try {
+      const formattedDate = birthDate.toISOString().split('T')[0];
+      
+      await completeProfile({
+        name,
+        phone,
+        email,
+        dateOfBirth: formattedDate,
+        gender: gender.toLowerCase(),
+        fullAddress: address
+      }, accessToken || '');
+      
+      Alert.alert('Success', 'Profile saved successfully!');
+      if (onBack) onBack();
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Failed to save profile');
+    }
+  };
 
   return (
     <ImageBackground source={require('../../../assets/role_bg.jpg')} className="flex-1" resizeMode="cover">
@@ -110,8 +136,16 @@ export const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack }
             </View>
           </View>
 
-          <TouchableOpacity className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30">
-            <Text className="text-base font-bold text-white">Save Changes</Text>
+          <TouchableOpacity 
+            onPress={handleSave}
+            disabled={isLoading}
+            className="items-center rounded-2xl bg-primary py-4 shadow-lg shadow-primary/30"
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text className="text-base font-bold text-white">Save Changes</Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
