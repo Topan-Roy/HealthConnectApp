@@ -71,7 +71,30 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    set({ user: null, accessToken: null, refreshToken: null });
+    const { accessToken } = get();
+
+    // Call logout API to invalidate the token server-side
+    try {
+      console.log('\n🔵 [LOGOUT] Request →', ENDPOINTS.AUTH.LOGOUT);
+      const response = await fetch(ENDPOINTS.AUTH.LOGOUT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+      });
+      const result = await response.json().catch(() => ({}));
+      console.log('🟢 [LOGOUT] Status →', response.status);
+      console.log('🟢 [LOGOUT] Response →', JSON.stringify(result, null, 2));
+    } catch (error: any) {
+      // Network error or server down — still proceed with local logout
+      console.log('🔴 [LOGOUT] API call failed (proceeding with local logout):', error.message);
+    }
+
+    // Always clear in-memory state
+    set({ user: null, accessToken: null, refreshToken: null, error: null });
+
+    // Clear persisted storage (best-effort)
     try {
       await AsyncStorage.multiRemove([
         STORAGE_KEYS.USER,
@@ -79,7 +102,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         STORAGE_KEYS.REFRESH_TOKEN,
       ]);
     } catch (error) {
-      console.log('Failed to clear auth data:', error);
+      console.log('[logout] Failed to clear AsyncStorage (session cleared in-memory):', error);
     }
   },
 

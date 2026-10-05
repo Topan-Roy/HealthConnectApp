@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,10 @@ import {
   Image,
   ImageBackground,
   Alert,
-  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '../../store/authStore';
 import {
   User,
   Heart,
@@ -61,16 +62,48 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
   onProfile,
   onLogout,
 }) => {
+  const { logout, user } = useAuthStore();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = () => {
     Alert.alert(
       'Logout',
-      'আপনি কি সত্যিই logout করতে চান?',
+      'Are you sure you want to logout?',
       [
-        { text: 'না', style: 'cancel' },
-        { text: 'হ্যাঁ, Logout', style: 'destructive', onPress: () => onLogout && onLogout() },
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Yes, Logout',
+          style: 'destructive',
+          onPress: async () => {
+            setIsLoggingOut(true);
+            try {
+              await logout(); // calls POST /api/users/logout with Bearer token
+            } finally {
+              setIsLoggingOut(false);
+              onLogout && onLogout(); // navigate away regardless of API result
+            }
+          },
+        },
       ]
     );
   };
+
+  const getMenuHandler = (id: string) => {
+    switch (id) {
+      case 'personal':  return onPersonalInfo;
+      case 'health':    return onHealthInfo;
+      case 'emergency': return onEmergencyContact;
+      case 'payment':   return onPaymentMethods;
+      case 'settings':  return onSettings;
+      case 'help':      return onHelpSupport;
+      default:          return undefined;
+    }
+  };
+
+  const displayName  = user?.name  ?? 'Guest User';
+  const displayEmail = user?.email ?? '';
+  const displayPhone = user?.phone ? `+${user.phone}` : '';
+  const avatarSeed   = displayName.replace(/\s+/g, '');
 
   return (
     <ImageBackground
@@ -79,71 +112,90 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
       resizeMode="cover"
     >
       <SafeAreaView className="flex-1 bg-transparent">
+
+        {/* ── Header ── */}
         <View className="items-center pt-2.5 pb-2">
           <Text className="text-[19px] font-bold text-primary">Profile</Text>
         </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 120 }}
-      >
-        {/* ── Main card ── */}
-        <View className="px-[18px] pt-[18px] pb-1">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 120 }}
+        >
+          {/* ── Main card ── */}
+          <View className="rounded-3xl bg-white/80 px-5 pt-6 pb-2 mt-2">
 
-          {/* ── Avatar ── */}
-          <View style={styles.avatarWrap}>
-            <Image
-              source={{ uri: 'https://api.dicebear.com/7.x/avataaars/png?seed=TopanRoy&backgroundColor=b6e3f4&radius=50' }}
-              style={styles.avatar}
-              resizeMode="cover"
-            />
+            {/* ── Avatar ── */}
+            <View className="self-center mb-3 h-[84px] w-[84px] rounded-full overflow-hidden bg-blue-50">
+              <Image
+                source={{ uri: `https://api.dicebear.com/7.x/avataaars/png?seed=${avatarSeed}&backgroundColor=b6e3f4&radius=50` }}
+                className="w-full h-full"
+                resizeMode="cover"
+              />
+            </View>
+
+            {/* ── Name / phone / email ── */}
+            <Text className="text-[17px] font-bold text-gray-900 text-center mb-1">
+              {displayName}
+            </Text>
+
+            {displayPhone ? (
+              <Text className="text-xs text-gray-500 text-center mb-1.5">
+                {displayPhone}
+              </Text>
+            ) : null}
+
+            {displayEmail ? (
+              <View className="flex-row items-center justify-center gap-1.5 mb-5">
+                <View className="h-[7px] w-[7px] rounded-full bg-blue-600" />
+                <Text className="text-xs text-gray-500">{displayEmail}</Text>
+              </View>
+            ) : null}
+
+            {/* ── Divider ── */}
+            <View className="h-px bg-slate-100 mb-1" />
+
+            {/* ── Menu rows ── */}
+            {MENU_ITEMS.map(({ id, Icon, label }, index) => {
+              const isLast = index === MENU_ITEMS.length - 1;
+              return (
+                <TouchableOpacity
+                  key={id}
+                  activeOpacity={0.65}
+                  onPress={getMenuHandler(id)}
+                  className={`flex-row items-center py-3 ${!isLast ? 'border-b border-slate-100' : ''}`}
+                >
+                  <Icon size={20} color="#6B7280" style={{ marginRight: 14 }} />
+                  <Text className="flex-1 text-[13px] font-medium text-gray-700">
+                    {label}
+                  </Text>
+                  <ChevronRight size={18} color="#D1D5DB" />
+                </TouchableOpacity>
+              );
+            })}
+
+            {/* ── Divider before logout ── */}
+            <View className="h-px bg-slate-100 mt-1" />
+
+            {/* ── Logout row ── */}
+            <TouchableOpacity
+              activeOpacity={0.65}
+              onPress={handleLogout}
+              disabled={isLoggingOut}
+              className="flex-row items-center py-3.5"
+            >
+              {isLoggingOut ? (
+                <ActivityIndicator size="small" color="#EF4444" style={{ marginRight: 14 }} />
+              ) : (
+                <LogOut size={20} color="#EF4444" style={{ marginRight: 14 }} />
+              )}
+              <Text className="flex-1 text-[13px] font-medium text-red-500">
+                {isLoggingOut ? 'Logging out…' : 'Logout'}
+              </Text>
+            </TouchableOpacity>
+
           </View>
-
-          {/* ── Name / phone / email ── */}
-          <Text style={styles.name}>Topan Roy</Text>
-          <Text style={styles.phone}>+880 1712-345678</Text>
-
-          <View style={styles.emailRow}>
-            <View style={styles.emailDot} />
-            <Text style={styles.email}>topanroy@gmail.com</Text>
-          </View>
-
-          {/* ── Divider ── */}
-          <View style={styles.divider} />
-
-          {/* ── Menu rows ── */}
-          {MENU_ITEMS.map(({ id, Icon, label }, index) => {
-            const isLast = index === MENU_ITEMS.length - 1;
-            const onPress = id === 'personal' ? onPersonalInfo : id === 'health' ? onHealthInfo : id === 'emergency' ? onEmergencyContact : id === 'payment' ? onPaymentMethods : id === 'settings' ? onSettings : id === 'help' ? onHelpSupport : undefined;
-            return (
-              <TouchableOpacity
-                key={id}
-                activeOpacity={0.65}
-                onPress={onPress}
-                style={[styles.menuRow, isLast && styles.menuRowLast]}
-              >
-                <Icon size={20} color="#6B7280" style={styles.menuIcon} />
-                <Text style={styles.menuLabel}>{label}</Text>
-                <ChevronRight size={18} color="#D1D5DB" />
-              </TouchableOpacity>
-            );
-          })}
-
-          {/* ── Divider before logout ── */}
-          <View style={styles.divider} />
-
-          {/* ── Logout row ── */}
-          <TouchableOpacity
-            activeOpacity={0.65}
-            onPress={handleLogout}
-            style={styles.logoutRow}
-          >
-            <LogOut size={20} color="#374151" style={styles.menuIcon} />
-            <Text style={styles.menuLabel}>Logout</Text>
-          </TouchableOpacity>
-
-        </View>
-      </ScrollView>
+        </ScrollView>
 
         <PatientHomeBottomNav
           activeTab="Profile"
@@ -153,88 +205,10 @@ export const PatientProfileScreen: React.FC<PatientProfileScreenProps> = ({
           onMessages={onMessages}
           onProfile={onProfile}
         />
+
       </SafeAreaView>
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  /* avatar */
-  avatarWrap: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    backgroundColor: '#EFF6FF',
-    overflow: 'hidden',
-    alignSelf: 'center',
-    marginBottom: 9,
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
-  },
-
-  /* user info */
-  name: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#111827',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  phone: {
-    fontSize: 12,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginBottom: 6,
-  },
-  emailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    marginBottom: 20,
-  },
-  emailDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: '#2563EB',
-  },
-  email: {
-    fontSize: 12,
-    color: '#6B7280',
-  },
-
-  /* divider */
-  divider: {
-    height: 0,
-  },
-
-  /* menu */
-  menuRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  menuRowLast: {
-  },
-  menuIcon: {
-    marginRight: 14,
-  },
-  menuLabel: {
-    flex: 1,
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#374151',
-  },
-
-  /* logout */
-  logoutRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-  },
-});
 
 export default PatientProfileScreen;

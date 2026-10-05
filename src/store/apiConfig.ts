@@ -7,6 +7,7 @@ export const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 export const ENDPOINTS = {
   AUTH: {
     LOGIN: `${BASE_URL}/auth/login`,
+    LOGOUT: `${BASE_URL}/users/logout`,
   },
   PATIENT: {
     INITIATE: `${BASE_URL}/auth/patient/initiate`,
