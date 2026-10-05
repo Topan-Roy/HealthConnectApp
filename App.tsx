@@ -140,6 +140,7 @@ export default function App() {
   const [screen, setScreen] = useState<ScreenState>('splash');
   const [userRole, setUserRole] = useState<'patient' | 'doctor' | null>(null);
   const [authFlowOrigin, setAuthFlowOrigin] = useState<'patient' | 'doctor'>('patient');
+  const [welcomeIntent, setWelcomeIntent] = useState<'login' | 'signup'>('signup');
   const [doctorProfile, setDoctorProfile] = useState<DoctorProfileData>(INITIAL_DOCTOR_PROFILE);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [bookingDate, setBookingDate] = useState('');
@@ -341,6 +342,7 @@ export default function App() {
   const handleSelectRole = (role: 'patient' | 'doctor') => {
     setUserRole(role);
     if (role === 'patient') {
+      // Always go to login screen; patient can tap "Sign Up" from there
       navigateTo('patient-login');
     } else if (role === 'doctor') {
       navigateTo('doctor-login');
@@ -367,8 +369,14 @@ export default function App() {
       {/* 3. Welcome / Auth Options Screen */}
       {screen === 'welcome' && (
         <WelcomeAuthScreen
-          onGetStarted={() => setScreen('role-selection')}
-          onLogin={() => setScreen('role-selection')}
+          onGetStarted={() => {
+            setWelcomeIntent('signup');
+            setScreen('role-selection');
+          }}
+          onLogin={() => {
+            setWelcomeIntent('login');
+            setScreen('role-selection');
+          }}
           onBack={() => setScreen('onboarding')}
         />
       )}

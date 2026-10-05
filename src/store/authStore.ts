@@ -31,8 +31,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   error: null,
 
   setAuth: async (user, accessToken, refreshToken = '') => {
+    // Update in-memory state immediately — never block on storage
     set({ user, accessToken, refreshToken });
-    await get().persistAuthData(user, accessToken, refreshToken);
+    // Fire-and-forget persistence; storage errors won't break the session
+    get().persistAuthData(user, accessToken, refreshToken).catch((e) =>
+      console.log('[setAuth] Storage persistence failed (session still active):', e)
+    );
   },
 
   login: async (data) => {
@@ -48,14 +52,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const result = await response.json();
       console.log('🟢 [LOGIN] Status →', response.status);
       console.log('🟢 [LOGIN] Response →', JSON.stringify(result, null, 2));
-      
+
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Login failed');
       }
-      
+
       const { user, accessToken } = result.data;
-      await get().setAuth(user, accessToken);
-      
+      // setAuth is now fire-and-forget for storage; in-memory state is set immediately
+      get().setAuth(user, accessToken);
+
       set({ isLoading: false });
       return result;
     } catch (error: any) {
@@ -98,8 +103,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       await Promise.all(promises);
     } catch (error) {
-      console.log("Failed to persist auth data:", error);
-      throw error;
+      // Log but do NOT re-throw — a storage failure must not break the login session
+      console.log('[persistAuthData] AsyncStorage unavailable, session is in-memory only:', error);
     }
   },
 

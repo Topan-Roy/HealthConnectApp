@@ -1,4 +1,8 @@
-export const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://tablet-catalogue-antivirus-regions.trycloudflare.com/api/v1';
+if (!process.env.EXPO_PUBLIC_API_URL) {
+  console.warn('⚠️ [apiConfig] EXPO_PUBLIC_API_URL is not set! Check your .env file and restart Metro.');
+}
+
+export const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? '';
 
 export const ENDPOINTS = {
   AUTH: {
